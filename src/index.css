@@ -11,3 +11,55 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.header {
+  padding: 11px 22px 0px 22px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+figure.logo {
+  margin: 16px 0;
+  display: flex;
+}
+
+button.text-button {
+  border: 0px;
+  background-color: unset;
+  cursor: pointer;
+}
+
+
+.editor-wrapper {
+  /*border: 1px solid black;*/
+  cursor: text;
+  min-height: 100%;
+  margin: 24px 48px;
+  font-size: 24px;
+  line-height: 1.5em;
+}
+
+#root {
+  height: 100vh;
+}
+
+.full-page-editor {
+  width: 100vw;
+  min-height: 100%;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(18px + 2vmin);
+  color: #282c34;
+}
+
+.public-DraftEditorPlaceholder-root,
+.public-DraftEditor-content {
+  margin: 0 -15px -15px;
+  padding: 15px;
+}
