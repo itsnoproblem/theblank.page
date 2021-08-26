@@ -3,6 +3,13 @@ figure.logo {
     display: flex;
 }
 
-figure.logo > img {
+figure.logo > svg {
     cursor: pointer;
+    min-width: 26px;
+    margin: 8px 0;
+}
+
+.logomask {
+    color: #FFFFFF;
+    background-color: #282c34;
 }

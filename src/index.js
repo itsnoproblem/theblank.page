@@ -4,10 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { DAppProvider } from "@usedapp/core";
+import theme from './theme.ts'
+import { ColorModeScript } from '@chakra-ui/react'
 
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={{}}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <App />
     </DAppProvider>
   </React.StrictMode>,

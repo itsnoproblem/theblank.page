@@ -1,8 +1,10 @@
 // ConnectButton.js
-import { Button, Box, Text } from "@chakra-ui/react";
+import { Button, Box, Text, useColorModeValue } from "@chakra-ui/react";
 import { useEthers, useEtherBalance } from "@usedapp/core";
 import { formatEther } from "@ethersproject/units";
 import React from "react";
+import './ConnectButton.css';
+
 
 
 type Props = {
@@ -17,36 +19,58 @@ export default function ConnectButton({ handleOpenModal }: Props) {
         activateBrowserWallet();
     }
 
+    const outerBg = useColorModeValue(
+        "blue.500",
+        "cyan.700"
+    );
+    const outerColor = useColorModeValue(
+        "white",
+        "gray.800"
+    );
+    const innerBg = useColorModeValue(
+        "blue.200",
+        "blue.100"
+    );
+    const innerColor = useColorModeValue(
+        "gray.600",
+        "blue.700"
+    );
+
+
+    const innerBorder = useColorModeValue("1px solid transparent", "1px solid transparent");
+
     return account ? (
         <Box
           display="flex"
           alignItems="center"
-          background="gray.700"
+          background={outerBg}
+          color={outerColor}
           borderRadius="xl"
           py="0"
         >
             <Box px="3">
-              <Text color="white" fontSize="md">
+              <Text color={outerColor} fontSize="md">
                 {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} ETH
               </Text>
             </Box>
 
             <Button
                 onClick={handleOpenModal}
-                bg="gray.800"
-                border="1px solid transparent"
+                bg={innerBg}
+                color={innerColor}
+                border={innerBorder}
                 _hover={{
                     border: "1px",
                     borderStyle: "solid",
-                    borderColor: "blue.400",
-                    backgroundColor: "gray.700",
+                    // borderColor: "blue.400",
+                    // backgroundColor: "gray.700",
                 }}
                 borderRadius="xl"
                 m="1px"
                 px={3}
                 height="38px"
             >
-                <Text color="white" fontSize="md" fontWeight="medium" mr="2">
+                <Text color={innerColor} fontSize="md" fontWeight="medium" mr="2">
                     {account &&
                     `${account.slice(0, 6)}...${account.slice(
                         account.length - 4,

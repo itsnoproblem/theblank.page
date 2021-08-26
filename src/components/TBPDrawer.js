@@ -9,17 +9,16 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
-    Input
+    Input,
 } from "@chakra-ui/react";
+import Logo from './Logo';
 import './TBPDrawer.css';
 
 export default function TBPDrawer() {
     const {isOpen, onOpen, onClose} = useDisclosure()
     return (
         <>
-            <figure className="logo">
-                <img src="book-open.svg" alt="the blank page" onClick={onOpen}/>
-            </figure>
+            <Logo onClick={onOpen}></Logo>
             <Drawer
                 isOpen={isOpen}
                 placement="left"
