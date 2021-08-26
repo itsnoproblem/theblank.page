@@ -11,6 +11,7 @@ import {
     DrawerOverlay,
     Input
 } from "@chakra-ui/react";
+import './TBPDrawer.css';
 
 export default function TBPDrawer() {
     const {isOpen, onOpen, onClose} = useDisclosure()

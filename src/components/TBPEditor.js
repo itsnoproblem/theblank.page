@@ -1,7 +1,7 @@
 import React from 'react';
 import {Editor, EditorState, RichUtils, convertFromRaw, convertToRaw} from 'draft-js';
 import debounce from 'lodash/debounce';
-
+import './TBPEditor.css';
 
 class TBPEditor extends React.Component {
 

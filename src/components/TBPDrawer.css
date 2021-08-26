@@ -1,0 +1,8 @@
+figure.logo {
+    margin: 16px 0;
+    display: flex;
+}
+
+figure.logo > img {
+    cursor: pointer;
+}
