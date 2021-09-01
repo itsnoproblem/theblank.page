@@ -1,7 +1,6 @@
+import './TBPDrawer.css';
 import React from "react";
 import {
-    useDisclosure,
-    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -9,16 +8,25 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
-    Input,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
+    useDisclosure,
 } from "@chakra-ui/react";
+import {CopyIcon} from "@chakra-ui/icons";
 import Logo from './Logo';
-import './TBPDrawer.css';
+import AccountPages from "./drawer/AccountPages";
+import PageView from "./drawer/PageView";
 
 export default function TBPDrawer() {
     const {isOpen, onOpen, onClose} = useDisclosure()
+    const [tabIndex, setTabIndex] = React.useState(0)
+
     return (
         <>
-            <Logo onClick={onOpen}></Logo>
+            <Logo onClick={onOpen}/>
             <Drawer
                 isOpen={isOpen}
                 placement="left"
@@ -28,17 +36,24 @@ export default function TBPDrawer() {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader>Create your account</DrawerHeader>
+                    <DrawerHeader>
 
+                    </DrawerHeader>
                     <DrawerBody>
-                        <Input placeholder="Type here..." />
+                        <Tabs onChange={(index) => setTabIndex(index)}>
+                            <TabList>
+                                <Tab><CopyIcon /></Tab>
+                                <Tab></Tab>
+                            </TabList>
+                            <TabPanels p="2rem">
+                                <TabPanel><AccountPages /></TabPanel>
+                                <TabPanel><PageView /></TabPanel>
+                            </TabPanels>
+                        </Tabs>
                     </DrawerBody>
 
                     <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
-                            Cancel
-                        </Button>
-                        <Button colorScheme="blue">Save</Button>
+                        drawer footer
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
