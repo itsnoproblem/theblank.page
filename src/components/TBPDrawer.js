@@ -15,7 +15,7 @@ import {
     Tabs,
     useDisclosure,
 } from "@chakra-ui/react";
-import {CopyIcon} from "@chakra-ui/icons";
+import {CopyIcon, EditIcon} from "@chakra-ui/icons";
 import Logo from './Logo';
 import AccountPages from "./drawer/AccountPages";
 import PageView from "./drawer/PageView";
@@ -43,7 +43,7 @@ export default function TBPDrawer() {
                         <Tabs onChange={(index) => setTabIndex(index)}>
                             <TabList>
                                 <Tab><CopyIcon /></Tab>
-                                <Tab></Tab>
+                                <Tab><EditIcon /></Tab>
                             </TabList>
                             <TabPanels p="2rem">
                                 <TabPanel><AccountPages /></TabPanel>
