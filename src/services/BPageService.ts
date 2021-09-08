@@ -4,12 +4,12 @@ const getAll = (): Map<number, BPage> => {
     return pagesById();
 };
 
-const get = (id: number): BPage|undefined => {
+export const get = (id: number): BPage|undefined => {
     let allPages = pagesById();
     return allPages.get(id);
 };
 
-const create = (pg: BPage): number => {
+export const create = (pg: BPage): number => {
     pg.id = nextId();
     let allPages = pagesById()
     allPages.set(pg.id, pg);
@@ -17,9 +17,9 @@ const create = (pg: BPage): number => {
     return pg.id;
 };
 
-const update = (pg: BPage): boolean => {
+export const update = (pg: BPage): boolean => {
     let allPages = pagesById();
-    if(allPages.has(pg.id)) {
+    if(!allPages.has(pg.id)) {
         console.error("Page not found for update "+pg.id);
         return false;
     }
@@ -29,14 +29,22 @@ const update = (pg: BPage): boolean => {
 };
 
 const save = (pages: Map<number, BPage>): boolean => {
-    const raw = JSON.stringify(pages);
+    const raw = JSON.stringify(Array.from(pages.entries()));
     localStorage.setItem("pagesById", raw);
     return true;
 }
 
 const pagesById = (): Map<number, BPage> => {
-    let raw = localStorage.getItem("pagesById") || "";
-    return JSON.parse(raw) || new Map();
+    let allPages;
+    let raw = localStorage.getItem("pagesById")
+    if(raw) {
+        allPages = JSON.parse(raw);
+    }
+    else {
+        allPages = []
+    }
+
+    return new Map<number, BPage>(allPages);
 }
 
 const nextId = () => {

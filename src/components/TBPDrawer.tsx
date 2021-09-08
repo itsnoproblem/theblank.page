@@ -7,7 +7,7 @@ import {
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay,
+    DrawerOverlay, Input, InputGroup, InputLeftElement,
     Tab,
     TabList,
     TabPanel,
@@ -15,10 +15,15 @@ import {
     Tabs,
     useDisclosure,
 } from "@chakra-ui/react";
-import {CopyIcon, EditIcon} from "@chakra-ui/icons";
+import {CopyIcon, EditIcon, SearchIcon} from "@chakra-ui/icons";
 import Logo from './Logo';
-import AccountPages from "./drawer/AccountPages";
 import PageView from "./drawer/PageView";
+import PageList from "./drawer/PageList";
+
+type Props = {
+    handleSelectPage: any;
+    handleEditPage: any;
+}
 
 export default function TBPDrawer() {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -26,7 +31,7 @@ export default function TBPDrawer() {
 
     return (
         <>
-            <Logo onClick={onOpen}/>
+            <Logo onClick={onOpen} />
             <Drawer
                 isOpen={isOpen}
                 placement="left"
@@ -46,7 +51,18 @@ export default function TBPDrawer() {
                                 <Tab><EditIcon /></Tab>
                             </TabList>
                             <TabPanels p="2rem">
-                                <TabPanel><AccountPages /></TabPanel>
+                                <TabPanel>
+                                    <div>
+                                        <InputGroup>
+                                            <InputLeftElement
+                                                pointerEvents="none"
+                                                children={<SearchIcon color="gray.300" />}
+                                            />
+                                            <Input type="text" placeholder="Search" />
+                                        </InputGroup>
+                                        <PageList />
+                                    </div>
+                                </TabPanel>
                                 <TabPanel><PageView /></TabPanel>
                             </TabPanels>
                         </Tabs>

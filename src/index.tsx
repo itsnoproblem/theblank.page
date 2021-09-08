@@ -3,13 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { DAppProvider } from "@usedapp/core";
-import theme from './theme.ts'
+import {ChainId, Config, DAppProvider} from "@usedapp/core";
+import theme from './theme'
 import { ColorModeScript } from '@chakra-ui/react'
+
+// const config: Config = {
+//     readOnlyChainId: ChainId.Mainnet,
+//     readOnlyUrls: {
+//         [ChainId.Mainnet]: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60ecb2bf67774900350d9c41',
+//     },
+// }
+
+const config = {};
 
 ReactDOM.render(
   <React.StrictMode>
-    <DAppProvider config={{}}>
+    <DAppProvider config={config}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <App />
     </DAppProvider>
