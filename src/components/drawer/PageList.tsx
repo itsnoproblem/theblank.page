@@ -83,10 +83,19 @@ export function Page({title, modified, id, handleSelectPage, handleEditPage}: Pr
         <Tr _hover={{
             color: "gray.700",
             backgroundColor: "blue.300",
+            cursor: "pointer",
         }} onClick={handleSelectPage}>
             <Td>{title}</Td>
             <Td>{modified}</Td>
-            <Td><EditIcon onClick={handleEditPage}/></Td>
+            <Td><IconButton
+                aria-label={"Edit "+id}
+                icon={<EditIcon/>}
+                onClick={handleEditPage}
+                _hover={{
+                    backgroundColor: "blue.700",
+                    color: "gray.200",
+                }}
+            /></Td>
         </Tr>
 
     )

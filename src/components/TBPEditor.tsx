@@ -1,17 +1,15 @@
+import './TBPEditor.css';
 import React, {useEffect, useRef} from 'react';
 import {Editor, EditorState, RichUtils, convertFromRaw, convertToRaw} from 'draft-js';
-import debounce from 'lodash/debounce';
-import './TBPEditor.css';
+import { useDebouncedCallback } from 'use-debounce';
+import {useContext, useState} from "react";
 import BPageService from  '../services/BPageService'
-import BPage from "../services/Page";
-import {useContext} from "react";
 import {EditorContext} from "../editor-context";
 
 export const TBPEditor = () => {
-
+    let initialState;
     const editor = useRef(null);
     const {page, setPage} = useContext(EditorContext);
-    let initialState;
 
     if(page !== undefined) {
         const raw = JSON.parse(page.content);
@@ -27,11 +25,10 @@ export const TBPEditor = () => {
 
     const [editorState, setEditorState] = React.useState(initialState);
 
-    const handleKeyCommand = (command, editorState) => {
-        const newState = RichUtils.handleKeyCommand(editorState, command);
-
+    const handleKeyCommand = (command, state) => {
+        const newState = RichUtils.handleKeyCommand(state, command);
         if (newState) {
-            handleOnChange(newState);
+            setEditorState(newState);
             return 'handled';
         }
 
@@ -47,9 +44,12 @@ export const TBPEditor = () => {
             initialState = EditorState.createEmpty();
         }
         setEditorState(initialState);
+
+        setTimeout(() => { focusEditor() }, 1000);
     }, [page])
 
     const focusEditor = () => {
+        console.log("focusEditor")
         if (editor.current !== undefined) {
             console.log("focus");
             // @ts-ignore
@@ -61,13 +61,15 @@ export const TBPEditor = () => {
         }
     };
 
-    const handleOnChange = (editorState) => {
-        setEditorState(editorState);
-        saveContent(editorState.getCurrentContent());
+    const handleOnChange = (state) => {
+        setEditorState(state);
+        if (state.getCurrentContent() !== editorState.getCurrentContent()) {
+            saveContent(state.getCurrentContent());
+        }
     }
 
-    const saveContent = debounce((content) => {
-            console.log("bounce");
+    const saveContent = useDebouncedCallback((content) => {
+            console.log("saveContent "+ (new Date()).toUTCString());
             const raw = JSON.stringify(convertToRaw(content))
             if (page === undefined) {
                 let pg = {
@@ -83,20 +85,13 @@ export const TBPEditor = () => {
             } else {
                 if(raw != page.content) {
                     page.content = raw
-                    BPageService.update(page)
-                    console.log("Updated page...");
-                    console.log(page);
+                    BPageService.update(page);
+                    setPage(page);
+                    console.log("Updated page " + page.id);
                 }
             }
+        }, 2000);
 
-
-        }, 3000);
-
-
-    // useEffect(() => {
-        // console.log("mounted");
-        // setTimeout(() => { focusEditor() }, 1000)
-    // });
 
     return (
         <div className={"editor-wrapper"} onClick={focusEditor}>
