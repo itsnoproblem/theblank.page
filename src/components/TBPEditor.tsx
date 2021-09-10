@@ -49,9 +49,7 @@ export const TBPEditor = () => {
     }, [page])
 
     const focusEditor = () => {
-        console.log("focusEditor")
         if (editor.current !== undefined) {
-            console.log("focus");
             // @ts-ignore
             editor.current.focus();
         }

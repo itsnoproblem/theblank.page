@@ -7,14 +7,14 @@ import {ChainId, Config, DAppProvider} from "@usedapp/core";
 import theme from './theme'
 import { ColorModeScript } from '@chakra-ui/react'
 
-// const config: Config = {
-//     readOnlyChainId: ChainId.Mainnet,
-//     readOnlyUrls: {
-//         [ChainId.Mainnet]: 'https://eth-mainnet.gateway.pokt.network/v1/lb/60ecb2bf67774900350d9c41',
-//     },
-// }
+const config: Config = {
+    readOnlyChainId: ChainId.Mainnet,
+    readOnlyUrls: {
+        [ChainId.Mainnet]: 'https://cdbb41dde3e914493dcc48ff6adac730:@eth-mainnet.gateway.pokt.network/v1/lb/60ecb2bf67774900350d9c41',
+    },
+}
 
-const config = {};
+// const config = {};
 
 ReactDOM.render(
   <React.StrictMode>
