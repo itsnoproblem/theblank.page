@@ -60,7 +60,9 @@ const pagesById = (): Map<number, BPage> => {
 const latest = (): BPage => {
     const all = getAll();
     if(all.size < 1) {
-        return blankPage()
+        let pg = blankPage();
+        pg.id = create(pg);
+        return pg;
     }
 
     return all.entries().next().value[1];
