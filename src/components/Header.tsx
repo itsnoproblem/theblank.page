@@ -1,6 +1,6 @@
 import './Header.css';
 import React from "react";
-import { useDisclosure } from '@chakra-ui/react';
+import {useDisclosure} from '@chakra-ui/react';
 import ConnectButton from "./ConnectButton";
 import AccountModal from "./AccountModal";
 import TBPDrawer from "./TBPDrawer";

@@ -4,16 +4,16 @@ import {
     Flex,
     Link,
     Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
     ModalBody,
     ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     Text,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon, CopyIcon } from "@chakra-ui/icons";
-import { useEthers } from "@usedapp/core";
+import {CopyIcon, ExternalLinkIcon} from "@chakra-ui/icons";
+import {useEthers} from "@usedapp/core";
 import React from "react";
 
 type Props = {

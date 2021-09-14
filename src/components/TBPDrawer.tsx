@@ -1,24 +1,26 @@
 import './TBPDrawer.css';
 import React, {useContext} from "react";
 import {
-    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay, Input, InputGroup, InputLeftElement,
+    DrawerOverlay,
+    HStack,
+    Image,
+    Link,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
     Text,
+    useColorModeValue,
     useDisclosure,
-    useColorModeValue, Image, Link, VStack,
 } from "@chakra-ui/react";
-import {AddIcon, CopyIcon, EditIcon, SearchIcon} from "@chakra-ui/icons";
+import {AddIcon, CopyIcon, EditIcon} from "@chakra-ui/icons";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";
@@ -70,7 +72,7 @@ export default function TBPDrawer() {
 
                     </DrawerHeader>
                     <DrawerBody>
-                        <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
+                        <Tabs variant={"solid-rounded"} index={tabIndex} onChange={(index) => setTabIndex(index)}>
                             <TabList>
                                 <Tab><CopyIcon /></Tab>
                                 <Tab><EditIcon /></Tab>
@@ -79,13 +81,6 @@ export default function TBPDrawer() {
                             <TabPanels>
                                 {/* Page LIst */}
                                 <TabPanel>
-                                    {/*<InputGroup mb={6}>*/}
-                                    {/*    <InputLeftElement*/}
-                                    {/*        pointerEvents="none"*/}
-                                    {/*        children={<SearchIcon color="gray.300" />}*/}
-                                    {/*    />*/}
-                                    {/*    <Input type="text" placeholder="Search" />*/}
-                                    {/*</InputGroup>*/}
                                     <EditorContext.Consumer>
                                         {({page, setPage}) => (
                                             <PageList page={page} setPage={setPage} changeTab={changeTab}/>
@@ -107,12 +102,18 @@ export default function TBPDrawer() {
                     </DrawerBody>
 
                     <DrawerFooter alignItems={"center"}>
-                        <VStack alignItems={"center"} ml={"auto"} mr={"auto"}>
+                        {/*<VStack alignItems={"center"} ml={"auto"} mr={"auto"}>*/}
+                        {/*    <Link href={"https://discord.alchemist.wtf/"}>*/}
+                        {/*        <Image src={"/alchemist.png"} boxSize={["24px"]}/>*/}
+                        {/*    </Link>*/}
+                        {/*    <Text color={footerColor} mr={2}>made by the alchemists of the #chaos-lab</Text>*/}
+                        {/*</VStack>*/}
+                        <HStack alignItems={"center"} ml={"auto"} mr={"auto"}>
                             <Link href={"https://discord.alchemist.wtf/"}>
                                 <Image src={"/alchemist.png"} boxSize={["24px"]}/>
                             </Link>
-                            <Text color={footerColor} mr={2}>made by the alchemists of the #chaos-lab</Text>
-                        </VStack>
+                            <Text color={footerColor} mr={2}>made by certified alchemists</Text>
+                        </HStack>
 
                     </DrawerFooter>
                 </DrawerContent>

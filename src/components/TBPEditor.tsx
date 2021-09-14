@@ -1,9 +1,8 @@
 import './TBPEditor.css';
-import React, {useEffect, useRef} from 'react';
-import {Editor, EditorState, RichUtils, convertFromRaw, convertToRaw} from 'draft-js';
-import { useDebouncedCallback } from 'use-debounce';
-import {useContext, useState} from "react";
-import BPageService from  '../services/BPageService'
+import React, {useContext, useEffect, useRef} from 'react';
+import {convertFromRaw, convertToRaw, Editor, EditorState, RichUtils} from 'draft-js';
+import {useDebouncedCallback} from 'use-debounce';
+import BPageService from '../services/BPageService'
 import {EditorContext} from "../editor-context";
 
 export const TBPEditor = () => {

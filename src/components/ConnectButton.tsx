@@ -1,10 +1,9 @@
 // ConnectButton.js
-import { Button, Box, Text, useColorModeValue } from "@chakra-ui/react";
-import { useEthers, useEtherBalance } from "@usedapp/core";
-import { formatEther } from "@ethersproject/units";
+import {Box, Button, Text, useColorModeValue} from "@chakra-ui/react";
+import {useEtherBalance, useEthers} from "@usedapp/core";
+import {formatEther} from "@ethersproject/units";
 import React from "react";
 import './ConnectButton.css';
-
 
 
 type Props = {
