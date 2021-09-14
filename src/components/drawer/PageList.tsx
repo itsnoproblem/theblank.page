@@ -1,27 +1,23 @@
 import './PageList.css'
 import React, {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
+    Button,
+    Grid,
+    GridItem,
+    HStack,
     SimpleGrid,
     Text,
-    Grid,
-    HStack,
-    Box,
-    useColorModeValue,
-    IconButton,
-    AlertDialog,
-    AlertDialogOverlay,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogBody,
-    AlertDialogFooter,
-    Button,
-    useMediaQuery,
-    GridItem, VStack, Flex, Center
+    useColorModeValue
 } from "@chakra-ui/react"
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
-import {ChevronDownIcon, DeleteIcon} from "@chakra-ui/icons";
-import {useState, useRef} from "react";
-import {repeat} from "lodash";
+import {DeleteIcon} from "@chakra-ui/icons";
+import {useRef, useState} from "react";
 
 type Props = {
     changeTab: any;
@@ -119,7 +115,7 @@ export default function PageList({changeTab, page, setPage}: Props) {
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const m = date.getMonth() - 1;
             return (
-                <Text textTransform={"uppercase"} size={"2xs"}>{date.getDay()} {months[m]} {date.getFullYear()}</Text>
+                <Text textTransform={"uppercase"} fontSize={"2xs"}>{date.getDay()} {months[m]} {date.getFullYear()}</Text>
             )
         }
 
@@ -137,8 +133,8 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
         return (
             <HStack spacing={"4px"}>
-                <Text size={"2xs"} textTransform={"uppercase"}>Today, {("0" + hrs).slice(-2)}:{("0" + date.getMinutes()).slice(-2)}</Text>
-                <Text size={"2xs"} textTransform={"uppercase"}>{ampm}</Text>
+                <Text fontSize={"2xs"} textTransform={"uppercase"}>Today, {("0" + hrs).slice(-2)}:{("0" + date.getMinutes()).slice(-2)}</Text>
+                <Text fontSize={"2xs"} textTransform={"uppercase"}>{ampm}</Text>
             </HStack>
         )
     }
@@ -174,9 +170,9 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
 
                             <GridItem colSpan={4} flex={1}>
+                                <ResponsiveDate d={value.modified}/>
                                 <Text isTruncated>{value.title}</Text>
                             </GridItem>
-                            {/*<ResponsiveDate d={value.modified}/>*/}
 
                             <GridItem textAlign={"right"}>
                                 <DeleteIcon

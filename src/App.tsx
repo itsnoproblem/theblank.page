@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import { ChakraProvider } from "@chakra-ui/react";
+import {ChakraProvider} from "@chakra-ui/react";
 import theme from './theme';
-import { EditorContext } from "./editor-context";
+import {EditorContext} from "./editor-context";
 import Header from "./components/Header";
-import { TBPEditor } from "./components/TBPEditor";
+import {TBPEditor} from "./components/TBPEditor";
 import BPageService from "./services/BPageService";
 
 export default function App() {

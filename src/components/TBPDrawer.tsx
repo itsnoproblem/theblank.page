@@ -1,24 +1,26 @@
 import './TBPDrawer.css';
 import React, {useContext} from "react";
 import {
-    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay, Input, InputGroup, InputLeftElement,
+    DrawerOverlay,
+    HStack,
+    Image,
+    Link,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
     Text,
+    useColorModeValue,
     useDisclosure,
-    useColorModeValue, Image, Link, VStack, HStack,
 } from "@chakra-ui/react";
-import {AddIcon, CopyIcon, EditIcon, SearchIcon} from "@chakra-ui/icons";
+import {AddIcon, CopyIcon, EditIcon} from "@chakra-ui/icons";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";

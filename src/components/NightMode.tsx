@@ -1,5 +1,5 @@
-import { MoonIcon } from '@chakra-ui/icons'
-import { Button, useColorModeValue, useColorMode } from '@chakra-ui/react'
+import {MoonIcon} from '@chakra-ui/icons'
+import {Button, useColorMode, useColorModeValue} from '@chakra-ui/react'
 import React from "react";
 
 export default function NightMode() {
