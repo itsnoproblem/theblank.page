@@ -12,13 +12,13 @@ export const TBPEditor = () => {
     const {page, setPage} = useContext(EditorContext);
 
     const newPage = () => {
-        let es = EditorState.createEmpty();
+        initialState = EditorState.createEmpty();
         console.log("empty state");
-        console.log(es);
+        console.log(initialState);
         let pg = {
             title: "New Page",
             id: -1,
-            content: JSON.stringify(es.getCurrentContent()),
+            content: JSON.stringify(initialState.getCurrentContent()),
             modified: new Date()
         }
 
@@ -27,15 +27,18 @@ export const TBPEditor = () => {
     }
 
     if(page.id < 1) {
+        console.log("Creating newPage");
+        console.log(page);
         newPage();
-    } else {
-        const raw = JSON.parse(page.content);
-        if(raw !== null && Array.isArray(raw.blocks)) {
-            initialState = EditorState.createWithContent(convertFromRaw(raw))
-        }
-        else {
-            initialState = EditorState.createEmpty();
-        }
+    }
+
+    const raw = JSON.parse(page.content);
+    if(raw !== null && Array.isArray(raw.blocks)) {
+        initialState = EditorState.createWithContent(convertFromRaw(raw))
+    }
+    else {
+        console.warn("using empty editor state");
+        initialState = EditorState.createEmpty();
     }
 
     const [editorState, setEditorState] = React.useState(initialState);
