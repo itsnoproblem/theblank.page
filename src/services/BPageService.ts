@@ -1,7 +1,10 @@
-import BPage  from "./Page";
+import BPage, {blankPage} from "./Page";
 
 const getAll = (): Map<number, BPage> => {
-    return pagesById();
+    let all = pagesById();
+    // @ts-ignore
+    const sorted = new Map([...Array.from(all.entries())].sort(([x, a], [y, b]) => new Date(b.modified) - new Date(a.modified)))
+    return sorted;
 };
 
 export const get = (id: number): BPage|undefined => {
@@ -24,9 +27,16 @@ export const update = (pg: BPage): boolean => {
         return false;
     }
 
+    pg.modified = new Date();
     allPages.set(pg.id, pg);
     return save(allPages);
 };
+
+export const remove = (id: number): boolean => {
+    let allPages = pagesById();
+    allPages.delete(id);
+    return save(allPages);
+}
 
 const save = (pages: Map<number, BPage>): boolean => {
     const raw = JSON.stringify(Array.from(pages.entries()));
@@ -47,6 +57,15 @@ const pagesById = (): Map<number, BPage> => {
     return new Map<number, BPage>(allPages);
 }
 
+const latest = (): BPage => {
+    const all = getAll();
+    if(all.size < 1) {
+        return blankPage()
+    }
+
+    return all.entries().next().value[1];
+}
+
 const nextId = () => {
     let currentId = localStorage.getItem("maxId") || "0";
     let max = parseInt(currentId) + 1;
@@ -59,6 +78,8 @@ const BPageService = {
     get,
     create,
     update,
+    latest,
+    remove,
 };
 
 export default BPageService;

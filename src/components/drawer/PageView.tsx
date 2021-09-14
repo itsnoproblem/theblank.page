@@ -46,7 +46,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
                         type="text"
                         value={pageTitle}
                         size="lg"
-                        onChange={(e) => { console.log(e); setPageTitle(e.currentTarget.value)}}
+                        onChange={(e) => { setPageTitle(e.currentTarget.value)}}
                     />
                 </FormControl>
             </Box>

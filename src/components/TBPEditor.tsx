@@ -11,7 +11,24 @@ export const TBPEditor = () => {
     const editor = useRef(null);
     const {page, setPage} = useContext(EditorContext);
 
-    if(page !== undefined) {
+    const newPage = () => {
+        let es = EditorState.createEmpty();
+        console.log("empty state");
+        console.log(es);
+        let pg = {
+            title: "New Page",
+            id: -1,
+            content: JSON.stringify(es.getCurrentContent()),
+            modified: new Date()
+        }
+
+        pg.id = BPageService.create(pg);
+        setPage(pg);
+    }
+
+    if(page.id < 1) {
+        newPage();
+    } else {
         const raw = JSON.parse(page.content);
         if(raw !== null && Array.isArray(raw.blocks)) {
             initialState = EditorState.createWithContent(convertFromRaw(raw))
@@ -19,8 +36,6 @@ export const TBPEditor = () => {
         else {
             initialState = EditorState.createEmpty();
         }
-    } else {
-        initialState = EditorState.createEmpty();
     }
 
     const [editorState, setEditorState] = React.useState(initialState);
@@ -39,12 +54,11 @@ export const TBPEditor = () => {
         const raw = JSON.parse(page.content);
         if(raw !== null && Array.isArray(raw.blocks)) {
             initialState = EditorState.createWithContent(convertFromRaw(raw))
-        }
-        else {
+        } else {
             initialState = EditorState.createEmpty();
         }
-        setEditorState(initialState);
 
+        setEditorState(initialState);
         setTimeout(() => { focusEditor() }, 1000);
     }, [page])
 
@@ -67,28 +81,21 @@ export const TBPEditor = () => {
     }
 
     const saveContent = useDebouncedCallback((content) => {
-            console.log("saveContent "+ (new Date()).toUTCString());
-            const raw = JSON.stringify(convertToRaw(content))
-            if (page === undefined) {
-                let pg = {
-                    title: "New Page",
-                    id: -1,
-                    content: raw,
-                    modified: new Date()
-                }
-                pg.id = BPageService.create(pg);
-                setPage(pg)
-                console.log("Created page...");
-                console.log(page);
-            } else {
-                if(raw != page.content) {
-                    page.content = raw
+            const raw = JSON.stringify(convertToRaw(content));
+            if(raw !== page.content) {
+                page.content = raw;
+                if(page.id < 1) {
+                    page.id = BPageService.create(page);
+                } else {
                     BPageService.update(page);
-                    setPage(page);
-                    console.log("Updated page " + page.id);
+
                 }
+
+                setPage(page);
+                console.log("Updated page " + page.id);
             }
-        }, 2000);
+
+        }, 1000);
 
 
     return (

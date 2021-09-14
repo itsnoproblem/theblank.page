@@ -3,7 +3,7 @@ export default interface BPage {
     id?: any;
     title: string;
     content: ContentState;
-    modified?: Date;
+    modified: Date;
 }
 
 export const blankPage = () => {
