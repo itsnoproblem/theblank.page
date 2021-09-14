@@ -8,12 +8,20 @@ import React, {
     useColorModeValue,
     IconButton,
     AlertDialog,
-    AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Button
+    AlertDialogOverlay,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogBody,
+    AlertDialogFooter,
+    Button,
+    useMediaQuery,
+    GridItem, VStack, Flex, Center
 } from "@chakra-ui/react"
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
 import {ChevronDownIcon, DeleteIcon} from "@chakra-ui/icons";
 import {useState, useRef} from "react";
+import {repeat} from "lodash";
 
 type Props = {
     changeTab: any;
@@ -111,7 +119,7 @@ export default function PageList({changeTab, page, setPage}: Props) {
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const m = date.getMonth() - 1;
             return (
-                <Text>{date.getDay()} {months[m]} {date.getFullYear()}</Text>
+                <Text textTransform={"uppercase"} size={"2xs"}>{date.getDay()} {months[m]} {date.getFullYear()}</Text>
             )
         }
 
@@ -129,8 +137,8 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
         return (
             <HStack spacing={"4px"}>
-                <Text fontSize="sm">Today, {("0" + hrs).slice(-2)}:{("0" + date.getMinutes()).slice(-2)}</Text>
-                <Text fontSize="sm" textTransform={"uppercase"}>{ampm}</Text>
+                <Text size={"2xs"} textTransform={"uppercase"}>Today, {("0" + hrs).slice(-2)}:{("0" + date.getMinutes()).slice(-2)}</Text>
+                <Text size={"2xs"} textTransform={"uppercase"}>{ampm}</Text>
             </HStack>
         )
     }
@@ -154,35 +162,35 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
                     return(
                         <Grid
+                            templateColumns={"repeat(5, 1fr)"}
                             key={value.id}
-                            templateColumns={"repeat(3, 1fr)"}
-                            borderRadius={"sm"}
-                            alignItems={"space-between"}
-                            justifyContent={"center"}
                             _hover={rowHover}
                             backgroundColor={rowBackground}
                             color={rowColor}
                             onClick={() => { handleSelectPage(value.id) }}
                             onDoubleClick={() => {handleEditPage(value.id)}}
+                            p={[4,6]}
                         >
-                            <Text p={4} pt={6} isTruncated>{value.title}</Text>
-                            <Box p={4} pt={6} align={"right"}>
-                                <ResponsiveDate d={value.modified}/>
-                            </Box>
-                            <Text p={4} align={"right"}>
+
+
+                            <GridItem colSpan={4} flex={1}>
+                                <Text isTruncated>{value.title}</Text>
+                            </GridItem>
+                            {/*<ResponsiveDate d={value.modified}/>*/}
+
+                            <GridItem textAlign={"right"}>
                                 <DeleteIcon
                                     alignSelf={"flex-end"}
-                                    // icon={(<DeleteIcon/>)}
                                     aria-label={"Actions for "+value.id}
                                     onClick={(e) => { handleConfirmDelete(value.id); e.stopPropagation(); }}
-                                    // hidden={(page.id == value.id)}
                                     d={"inline-block"}
                                     _hover={{
                                         cursor: "pointer",
                                         color: buttonColorHover,
                                     }}
                                 />
-                            </Text>
+                            </GridItem>
+
 
                         </Grid>
                     )

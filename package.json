@@ -32,7 +32,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "react-scripts build && docker run --rm -it -v ~/.aws:/root/.aws -v ~/dev/projects/theblank.page/build:/root/build amazon/aws-cli s3 sync --delete /root/build/ s3://theblank.page/"
   },
   "eslintConfig": {
     "extends": [
