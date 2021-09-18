@@ -83,18 +83,18 @@ export default function PageList({changeTab, page, setPage}: Props) {
         onClose();
     }
 
-    const activeRowBackgroundColor = useColorModeValue("blue.200", "gray.600");
+    const activeRowBackgroundColor = useColorModeValue("blue.100", "gray.600");
     const activeRowForegroundColor = useColorModeValue("blue.700", "gray.200");
     const activeRowHover = {
         backgroundColor: useColorModeValue("gray.300", "gray.600"),
         color: useColorModeValue("gray.500", "gray.200"),
     }
 
-    const inactiveRowBackgroundColor = useColorModeValue("blue.100", "gray.700");
+    const inactiveRowBackgroundColor = useColorModeValue("blue.200", "gray.700");
     const inactiveRowForegroundColor = useColorModeValue("blue.700", "");
     const inactiveRowHover = {
-        backgroundColor: useColorModeValue("blue.200", "cyan.700"),
-        color: useColorModeValue("blue.500", "blue.200"),
+        backgroundColor: useColorModeValue("blue.300", "cyan.700"),
+        color: useColorModeValue("gray.700", "blue.200"),
         cursor: "pointer"
     }
 
