@@ -1,6 +1,7 @@
 import './TBPDrawer.css';
 import React, {useContext} from "react";
 import {
+    Box,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -21,12 +22,16 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import {AddIcon, CopyIcon, EditIcon} from "@chakra-ui/icons";
+import {ImStack, ImQrcode, ImFeed} from "react-icons/all";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";
 import {EditorContext} from "../editor-context";
 import BPageService from "../services/BPageService";
+import RandomImage from "./RandomImage";
 import {EditorState} from 'draft-js';
+import EthereumQRCode from "./EthereumQRCode";
+import Publisher from "./drawer/Publisher";
 
 
 export default function TBPDrawer() {
@@ -52,7 +57,7 @@ export default function TBPDrawer() {
         setTabIndex(0);
     }
 
-    const backgroundColor = useColorModeValue("blue.200", "gray.700");
+    const backgroundColor = useColorModeValue("gray.50", "gray.700");
     const footerColor = useColorModeValue("gray.700", "gray.500");
     const colorScheme = useColorModeValue("blackAlpha", "blackAlpha");
     return (
@@ -71,25 +76,31 @@ export default function TBPDrawer() {
 
                     </DrawerHeader>
                     <DrawerBody>
-                        <Tabs variant={"solid-rounded"} index={tabIndex} onChange={(index) => setTabIndex(index)}>
+                        <Tabs h="100%" pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={(index) => setTabIndex(index)}>
                             <TabList mb={4} borderBottom={"1px solid"} pb={2}>
                                 <Tab>
-                                    <Tooltip hasArrow label={"Pages"} placement={"top"}>
-                                        <CopyIcon />
+                                    <Tooltip hasArrow placement="top" label="Pages">
+                                        <span><ImStack /></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip hasArrow label={"Modify \"" + page.title + "\""} placement={"top"}>
-                                        <EditIcon />
+                                    <Tooltip hasArrow placement="top" label="Edit page details">
+                                        <span><EditIcon /></span>
+                                    </Tooltip>
+                                </Tab>
+                                <Tab disabled={true}>
+                                    <Tooltip  hasArrow placement="top" label="Publish to network">
+                                        <span><ImFeed/></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip hasArrow label={"Create page"} placement={"top"}>
-                                        <AddIcon onClick={handleAddPage}/>
+                                    <Tooltip hasArrow placement="top" label="Create page">
+                                        <span><AddIcon onClick={handleAddPage}/></span>
                                     </Tooltip>
                                 </Tab>
                             </TabList>
-                            <TabPanels>
+                            <TabPanels h={"100%"}>
+
                                 {/* Page LIst */}
                                 <TabPanel>
                                     <EditorContext.Consumer>
@@ -98,9 +109,8 @@ export default function TBPDrawer() {
                                         )}
                                     </EditorContext.Consumer>
                                 </TabPanel>
-                                {/*
-                                Page View
-                                */}
+
+                                {/* Page View */}
                                 <TabPanel>
                                     <EditorContext.Consumer>
                                         {({page, setPage}) => (
@@ -108,22 +118,27 @@ export default function TBPDrawer() {
                                         )}
                                     </EditorContext.Consumer>
                                 </TabPanel>
+
+                                {/* publish on blockchain */}
+                                <TabPanel h={"100%"}>
+                                    <Publisher/>
+                                </TabPanel>
+                                {/*
+                                placeholder for new page
+                                */}
+                                <TabPanel>
+
+                                </TabPanel>
                             </TabPanels>
                         </Tabs>
                     </DrawerBody>
 
                     <DrawerFooter alignItems={"center"}>
-                        {/*<VStack alignItems={"center"} ml={"auto"} mr={"auto"}>*/}
-                        {/*    <Link href={"https://discord.alchemist.wtf/"}>*/}
-                        {/*        <Image src={"/alchemist.png"} boxSize={["24px"]}/>*/}
-                        {/*    </Link>*/}
-                        {/*    <Text color={footerColor} mr={2}>made by the alchemists of the #chaos-lab</Text>*/}
-                        {/*</VStack>*/}
                         <HStack alignItems={"center"} ml={"auto"} mr={"auto"}>
-                            <Link href={"https://discord.alchemist.wtf/"}>
+                            <Link href={"https://alchemist.wtf"} target="new">
                                 <Image src={"/alchemist.png"} boxSize={["24px"]}/>
                             </Link>
-                            <Text fontSize="sm" fontFamily={"Poppins"} color={footerColor} mr={2}>made by alchemists</Text>
+                            <Text fontSize="sm" fontFamily={"Poppins"} color={footerColor} mr={2}>made by certified alchemists</Text>
                         </HStack>
 
                     </DrawerFooter>
