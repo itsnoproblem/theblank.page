@@ -11,7 +11,7 @@ import React, {
     GridItem,
     HStack,
     SimpleGrid,
-    Text,
+    Text, Tooltip,
     useColorModeValue
 } from "@chakra-ui/react"
 import BPageService from "../../services/BPageService";
@@ -83,18 +83,18 @@ export default function PageList({changeTab, page, setPage}: Props) {
         onClose();
     }
 
-    const activeRowBackgroundColor = useColorModeValue("blue.200", "gray.600");
+    const activeRowBackgroundColor = useColorModeValue("blue.100", "gray.600");
     const activeRowForegroundColor = useColorModeValue("blue.700", "gray.200");
     const activeRowHover = {
         backgroundColor: useColorModeValue("gray.300", "gray.600"),
         color: useColorModeValue("gray.500", "gray.200"),
     }
 
-    const inactiveRowBackgroundColor = useColorModeValue("blue.100", "gray.700");
+    const inactiveRowBackgroundColor = useColorModeValue("gray.50", "gray.700");
     const inactiveRowForegroundColor = useColorModeValue("blue.700", "");
     const inactiveRowHover = {
-        backgroundColor: useColorModeValue("blue.200", "cyan.700"),
-        color: useColorModeValue("blue.500", "blue.200"),
+        backgroundColor: useColorModeValue("blue.300", "cyan.700"),
+        color: useColorModeValue("gray.700", "blue.200"),
         cursor: "pointer"
     }
 
@@ -115,7 +115,7 @@ export default function PageList({changeTab, page, setPage}: Props) {
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const m = date.getMonth() - 1;
             return (
-                <Text textTransform={"uppercase"} fontSize={"2xs"}>{date.getDay()} {months[m]} {date.getFullYear()}</Text>
+                <Text textTransform={"uppercase"} fontSize={"xs"}>{date.getDay()} {months[m]} {date.getFullYear()}</Text>
             )
         }
 
@@ -133,8 +133,8 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
         return (
             <HStack spacing={"4px"}>
-                <Text fontSize={"2xs"} textTransform={"uppercase"}>Today, {("0" + hrs).slice(-2)}:{("0" + date.getMinutes()).slice(-2)}</Text>
-                <Text fontSize={"2xs"} textTransform={"uppercase"}>{ampm}</Text>
+                <Text fontSize={"xs"} textTransform={"uppercase"}>Today, {("0" + hrs).slice(-2)}:{("0" + date.getMinutes()).slice(-2)}</Text>
+                <Text fontSize={"xs"} textTransform={"uppercase"}>{ampm}</Text>
             </HStack>
         )
     }
@@ -171,20 +171,22 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
                             <GridItem colSpan={4} flex={1}>
                                 <ResponsiveDate d={value.modified}/>
-                                <Text isTruncated>{value.title}</Text>
+                                <Text fontSize={"xl"} isTruncated>{value.title}</Text>
                             </GridItem>
 
                             <GridItem textAlign={"right"}>
-                                <DeleteIcon
-                                    alignSelf={"flex-end"}
-                                    aria-label={"Actions for "+value.id}
-                                    onClick={(e) => { handleConfirmDelete(value.id); e.stopPropagation(); }}
-                                    d={"inline-block"}
-                                    _hover={{
-                                        cursor: "pointer",
-                                        color: buttonColorHover,
-                                    }}
-                                />
+                                <Tooltip label={"Delete"}>
+                                    <DeleteIcon
+                                        alignSelf={"flex-end"}
+                                        aria-label={"Actions for "+value.id}
+                                        onClick={(e) => { handleConfirmDelete(value.id); e.stopPropagation(); }}
+                                        d={"inline-block"}
+                                        _hover={{
+                                            cursor: "pointer",
+                                            color: buttonColorHover,
+                                        }}
+                                    />
+                                </Tooltip>
                             </GridItem>
 
 

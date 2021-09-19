@@ -1,3 +1,5 @@
+import "@fontsource/poppins";
+import '@fontsource/roboto-mono';
 import React, {useState} from 'react';
 import {ChakraProvider} from "@chakra-ui/react";
 import theme from './theme';

@@ -2,7 +2,8 @@ import {extendTheme} from "@chakra-ui/react"
 
 const theme = extendTheme({
     fonts: {
-        DrawerFooter: "Montserrat",
+        Body: "Poppins",
+        Publisher: "Roboto Mono",
     },
     config: {
         initialColorMode: "light",
