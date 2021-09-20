@@ -14,7 +14,7 @@ export const get = (id: number): BPage|undefined => {
 
 export const create = (pg: BPage): number => {
     pg.id = nextId();
-    let allPages = pagesById()
+    let allPages = pagesById();
     allPages.set(pg.id, pg);
     save(allPages);
     return pg.id;
@@ -46,12 +46,12 @@ const save = (pages: Map<number, BPage>): boolean => {
 
 const pagesById = (): Map<number, BPage> => {
     let allPages;
-    let raw = localStorage.getItem("pagesById")
+    let raw = localStorage.getItem("pagesById");
     if(raw) {
         allPages = JSON.parse(raw);
     }
     else {
-        allPages = []
+        allPages = [];
     }
 
     return new Map<number, BPage>(allPages);
@@ -76,12 +76,12 @@ const nextId = () => {
 }
 
 const BPageService = {
-    getAll,
-    get,
-    create,
-    update,
-    latest,
-    remove,
+    getAll: getAll,
+    get: get,
+    create: create,
+    update: update,
+    latest: latest,
+    remove: remove,
 };
 
 export default BPageService;

@@ -4,6 +4,10 @@ export default interface BPage {
     title: string;
     content: ContentState;
     modified: Date;
+    account?: string;
+    address?: string;
+    floorPrice?: number;
+    royaltyPercent?: number;
 }
 
 export const blankPage = () => {
@@ -11,7 +15,7 @@ export const blankPage = () => {
         title: "new page",
         modified: new Date(),
         id: null,
-        content: null
+        content: null,
     }
     return bp;
 }

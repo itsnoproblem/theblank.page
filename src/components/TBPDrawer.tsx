@@ -17,33 +17,44 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
-    Text, Tooltip,
+    Text,
+    Tooltip,
     useColorModeValue,
     useDisclosure,
 } from "@chakra-ui/react";
-import {AddIcon, CopyIcon, EditIcon} from "@chakra-ui/icons";
-import {ImStack, ImQrcode, ImFeed} from "react-icons/all";
+import {AddIcon, EditIcon} from "@chakra-ui/icons";
+import {ImFeed, ImStack} from "react-icons/all";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";
 import {EditorContext} from "../editor-context";
 import BPageService from "../services/BPageService";
-import RandomImage from "./RandomImage";
 import {EditorState} from 'draft-js';
-import EthereumQRCode from "./EthereumQRCode";
 import Publisher from "./drawer/Publisher";
+import {useEthers} from "@usedapp/core";
 
 
 export default function TBPDrawer() {
+    const TAB_PAGELIST = 0;
+    const TAB_EDITPAGE = 1;
+    const TAB_PUBLISHER = 2;
+    const TAB_NEWPAGE = 3;
+
     const {isOpen, onOpen, onClose} = useDisclosure();
-    const [tabIndex, setTabIndex] = React.useState(0);
+    const [tabIndex, setTabIndex] = React.useState(TAB_PAGELIST);
     const {page, setPage} = useContext(EditorContext);
+    const {activateBrowserWallet, account } = useEthers();
 
     const changeTab = (idx) => {
-        setTabIndex(idx);
+        if(idx === TAB_NEWPAGE) {
+            handleAddPage();
+        }
+        else {
+            setTabIndex(idx);
+        }
     }
 
-    const handleAddPage = (e) => {
+    const handleAddPage = () => {
         let es = EditorState.createEmpty();
         let pg = {
             title: "New Page",
@@ -54,12 +65,13 @@ export default function TBPDrawer() {
 
         pg.id = BPageService.create(pg);
         setPage(pg);
-        setTabIndex(0);
+        setTabIndex(1);
     }
 
     const backgroundColor = useColorModeValue("gray.50", "gray.700");
     const footerColor = useColorModeValue("gray.700", "gray.500");
     const colorScheme = useColorModeValue("blackAlpha", "blackAlpha");
+
     return (
         <>
             <Logo onClick={onOpen} />
@@ -70,14 +82,18 @@ export default function TBPDrawer() {
                 onClose={onClose}
             >
                 <DrawerOverlay />
-                <DrawerContent backgroundColor={backgroundColor}>
+                <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
+
                     <DrawerCloseButton colorScheme={colorScheme}/>
                     <DrawerHeader>
 
                     </DrawerHeader>
                     <DrawerBody>
-                        <Tabs h="100%" pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={(index) => setTabIndex(index)}>
-                            <TabList mb={4} borderBottom={"1px solid"} pb={2}>
+                        <Box visibility={(account ? "hidden" : "visible")}>
+                            <Text fontSize={"lg"}>Please connect a wallet to continue</Text>
+                        </Box>
+                        <Tabs visibility={(account ? "visible" : "hidden")} h="100%" pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                            <TabList borderBottom={"1px solid"} pb={2}>
                                 <Tab>
                                     <Tooltip hasArrow placement="top" label="Pages">
                                         <span><ImStack /></span>
@@ -95,7 +111,7 @@ export default function TBPDrawer() {
                                 </Tab>
                                 <Tab>
                                     <Tooltip hasArrow placement="top" label="Create page">
-                                        <span><AddIcon onClick={handleAddPage}/></span>
+                                        <span><AddIcon/></span>
                                     </Tooltip>
                                 </Tab>
                             </TabList>

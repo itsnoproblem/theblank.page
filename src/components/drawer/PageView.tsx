@@ -1,16 +1,35 @@
-import {Box, Button, FormControl, FormLabel, Input, Stat, StatHelpText, StatLabel, StatNumber,} from "@chakra-ui/react";
+import {
+    Badge,
+    Box,
+    Button, ButtonGroup,
+    Divider, Flex,
+    FormControl,
+    FormLabel, Grid, GridItem, IconButton,
+    Input, Kbd, Link, List, ListItem, SimpleGrid,
+    Stat,
+    StatHelpText,
+    StatLabel,
+    StatNumber,
+    Text, useColorModeValue, useEditable, useEditableControls,
+} from "@chakra-ui/react";
 import React, {useState} from "react";
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
+import {ArrowForwardIcon, CheckCircleIcon, CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
+import {zip} from "lodash";
 
 type Props = {
     changeTab: any;
     page: BPage;
     setPage: any;
 }
+
 export default function PageView({changeTab, page, setPage}: Props) {
     const [pageTitle, setPageTitle] = useState(page.title);
     const [pageId, setPageId] = useState(page.id);
+
+    const linkColor = useColorModeValue("blue.600", "cyan.400")
+
 
     let date;
     if(typeof page.modified === "string") {
@@ -25,7 +44,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
         ("0" + date.getSeconds()).slice(-2);
     const modDate = date.toDateString();
 
-    if(pageId != page.id) {
+    if(pageId !== page.id) {
         setPageId(page.id);
         setPageTitle(page.title);
     }
@@ -40,34 +59,53 @@ export default function PageView({changeTab, page, setPage}: Props) {
     return(
         <>
             <Box p={4}>
-                <FormControl id="title" isRequired>
-                    <FormLabel>Title</FormLabel>
-                    <Input
-                        type="text"
-                        value={pageTitle}
-                        size="lg"
-                        onChange={(e) => { setPageTitle(e.currentTarget.value)}}
-                    />
-                </FormControl>
-            </Box>
-            <Box p={4}>
-                <Stat>
-                    <StatLabel>Last updated</StatLabel>
-                    <StatNumber>{modDate}</StatNumber>
-                    <StatHelpText>{modTime}</StatHelpText>
-                </Stat>
-            </Box>
-            <Box p={4}>
-                <Stat>
-                    <StatLabel>ID</StatLabel>
-                    <StatNumber>{page.id}</StatNumber>
-                </Stat>
-            </Box>
-            <Box p={4}>
-                <FormControl>
-                    <Button variant="outline" mr={3} onClick={(e) => changeTab(0)}>Cancel</Button>
-                    <Button colorScheme="blue" onClick={() => save()}>Save</Button>
-                </FormControl>
+                <Box pt={4}>
+                    <Stat>
+                        <StatLabel>{modTime}</StatLabel>
+                        <StatNumber>{modDate}</StatNumber>
+                        <StatHelpText>updated</StatHelpText>
+                    </Stat>
+
+                    <Text fontSize={"sm"} d={"flex"} pt={4} pb={8}>
+                        <Badge borderRadius={0} mr={2} variant={"solid"}>draft id</Badge>
+                        <Text>{("0000" + page.id).slice(-4)}</Text>
+                    </Text>
+
+                    <Divider orientation={"horizontal"}/>
+
+                    <Box borderTopStartRadius={"none"}  borderWidth={1} p={4}>
+                        <FormControl id="title" isRequired>
+                            <FormLabel>Title</FormLabel>
+                            <Input
+                                type="text"
+                                value={pageTitle}
+                                size="lg"
+                                onChange={(e) => { setPageTitle(e.currentTarget.value)}}
+                            />
+                        </FormControl>
+
+                        <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={8} mb={12}>
+
+                            <GridItem visibility={(page.address !== undefined) ? "hidden" : "visible"} color={linkColor} cursor={"pointer"} onClick={() => changeTab(2)}>publish settings</GridItem>
+                            <GridItem visibility={(page.address !== undefined) ? "hidden" : "visible"} color={linkColor} cursor={"pointer"} onClick={() => changeTab(2)}><ArrowForwardIcon/></GridItem>
+
+                            <GridItem>{(page.address === undefined) ? "not" : ""} published</GridItem>
+                            <GridItem><CheckCircleIcon color={(page.address === undefined) ? "gray.300" : "green.400"}/></GridItem>
+
+                            <GridItem>address:</GridItem>
+                            <GridItem><Kbd>{page.address === undefined ? "---" : "0xb772ce9f14fc7c7db0d4525adb9349fbd7ce456a"}</Kbd></GridItem>
+
+                        </Grid>
+
+                        <Box pt={4} textAlign={"right"}>
+                            <FormControl>
+                                <Button variant="outline" mr={3} onClick={(e) => changeTab(0)}>Cancel</Button>
+                                <Button colorScheme="blue" onClick={() => save()}>Save</Button>
+                            </FormControl>
+                        </Box>
+                    </Box>
+
+                </Box>
             </Box>
         </>
     )

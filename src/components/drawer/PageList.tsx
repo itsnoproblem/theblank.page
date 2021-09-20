@@ -11,7 +11,8 @@ import React, {
     GridItem,
     HStack,
     SimpleGrid,
-    Text, Tooltip,
+    Text,
+    Tooltip,
     useColorModeValue
 } from "@chakra-ui/react"
 import BPageService from "../../services/BPageService";
@@ -27,7 +28,7 @@ type Props = {
 
 export default function PageList({changeTab, page, setPage}: Props) {
     const data = BPageService.getAll();
-    const [pages, setPages] = useState(data);
+    const [, setPages] = useState(data);
     const [isOpen, setIsOpen] = useState(false);
     const [deleteCandidate, setDeleteCandidate] = useState(0);
 
