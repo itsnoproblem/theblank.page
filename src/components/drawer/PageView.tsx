@@ -66,15 +66,8 @@ export default function PageView({changeTab, page, setPage}: Props) {
                         <StatHelpText>updated</StatHelpText>
                     </Stat>
 
-                    <Text fontSize={"sm"} d={"flex"} pt={4} pb={8}>
-                        <Badge borderRadius={0} mr={2} variant={"solid"}>draft id</Badge>
-                        <Text>{("0000" + page.id).slice(-4)}</Text>
-                    </Text>
-
-                    <Divider orientation={"horizontal"}/>
-
                     <Box borderTopStartRadius={"none"}  borderWidth={1} p={4}>
-                        <FormControl id="title" isRequired>
+                        <FormControl id="title" isRequired isDisabled={page.address !== undefined}>
                             <FormLabel>Title</FormLabel>
                             <Input
                                 type="text"
@@ -97,13 +90,22 @@ export default function PageView({changeTab, page, setPage}: Props) {
 
                         </Grid>
 
-                        <Box pt={4} textAlign={"right"}>
+                        <Box pt={4} textAlign={"right"} visibility={(page.address !== undefined) ? "hidden" : "visible"}>
                             <FormControl>
                                 <Button variant="outline" mr={3} onClick={(e) => changeTab(0)}>Cancel</Button>
                                 <Button colorScheme="blue" onClick={() => save()}>Save</Button>
                             </FormControl>
                         </Box>
                     </Box>
+
+
+                    <Box>
+                        <Text d="block" textAlign={"right"} fontSize={"sm"} pt={4} pb={8}>
+                            <Badge borderRadius={0} mr={2} variant={"solid"}>draft id</Badge>
+                            <span>{("0000" + page.id).slice(-4)}</span>
+                        </Text>
+                    </Box>
+
 
                 </Box>
             </Box>

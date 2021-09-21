@@ -109,6 +109,8 @@ export const TBPEditor = () => {
                     preserveSelectionOnBlur={true}
                     spellCheck={true}
                     ref={editor}
+                    placeholder={"Write something..."}
+                    d={"inline-block"}
             />
         </div>
     );

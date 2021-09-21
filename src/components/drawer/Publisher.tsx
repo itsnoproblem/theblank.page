@@ -1,6 +1,6 @@
 import {
     Box,
-    Button, Checkbox,
+    Button, Checkbox, Divider,
     Flex,
     FormControl,
     FormHelperText,
@@ -15,11 +15,12 @@ import {
     NumberInputStepper,
     SimpleGrid,
     Spacer,
-    Switch
+    Switch, Text
 } from "@chakra-ui/react";
-import React, {useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import '@fontsource/roboto-mono';
 import {ArrowForwardIcon} from "@chakra-ui/icons";
+import {EditorContext} from "../../editor-context";
 
 
 const Publisher = () => {
@@ -31,6 +32,7 @@ const Publisher = () => {
     const [allowForks, setAllowForks] = useState(false);
     const [limitedEdition, setLimitedEdition] = useState(false);
     const [forkingFee, setForkingFee] = useState(defaultForkingFee);
+    const {page, setPage} = useContext(EditorContext)
 
     const handleRoyaltyChange = (value) => setRoyaltyValue(value);
     const handleMaxMintableChange = (value) => setMaxMintable(value);
@@ -48,6 +50,10 @@ const Publisher = () => {
 
     return (
         <Flex h="100%" flexDirection={"column"} mb={"30"}>
+            <Box>
+                <Text fontSize={"4xl"} lineHeight={"1.1em"}>{page.title}</Text>
+                <Divider mb={6} mt={2}/>
+            </Box>
             <Box mb={12}>
                 <SimpleGrid columns={[1,2]} spacing={12}>
 
