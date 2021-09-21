@@ -23,7 +23,7 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import {AddIcon, EditIcon} from "@chakra-ui/icons";
-import {ImFeed, ImStack} from "react-icons/all";
+import {ImFeed, ImStack} from "react-icons/im";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";
@@ -92,7 +92,7 @@ export default function TBPDrawer() {
                         <Box visibility={(account ? "hidden" : "visible")}>
                             <Text fontSize={"lg"}>Please connect a wallet to continue</Text>
                         </Box>
-                        <Tabs visibility={(account ? "visible" : "hidden")} h="100%" pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                        <Tabs visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
                             <TabList borderBottom={"1px solid"} pb={2}>
                                 <Tab>
                                     <Tooltip hasArrow placement="top" label="Pages">

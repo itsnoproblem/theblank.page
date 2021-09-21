@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders made by alchemistsq link', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  fireEvent.click(screen.getByTestId('menu'))
+  const mistElement = screen.getByText(/made by certified alchemists/i);
+  expect(mistElement).toBeInTheDocument();
 });

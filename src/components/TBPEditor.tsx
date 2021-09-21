@@ -36,7 +36,6 @@ export const TBPEditor = () => {
         initialState = EditorState.createWithContent(convertFromRaw(raw))
     }
     else {
-        console.warn("using empty editor state");
         initialState = EditorState.createEmpty();
     }
 
