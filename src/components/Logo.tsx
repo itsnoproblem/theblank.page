@@ -1,5 +1,6 @@
 import React from "react";
-import {Box, Tooltip} from '@chakra-ui/react'
+import {Box, Tooltip, useBreakpointValue} from '@chakra-ui/react'
+import {useTheme} from "@emotion/react";
 
 type Props = {
     onClick: any,
@@ -7,9 +8,10 @@ type Props = {
 }
 
 export default function Logo({onClick}: Props) {
+    const isDesktop = useBreakpointValue({sm: false, md: false, lg: true})
     return(
         <Box data-testid={"menu"} cursor={"pointer"} onClick={onClick} className="logo" mt={2}>
-            <Tooltip label={"menu"}>
+            <Tooltip  isDisabled={!isDesktop} label={"menu"}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none"
                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                      className="feather feather-book-open">

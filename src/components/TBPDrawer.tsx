@@ -18,7 +18,7 @@ import {
     TabPanels,
     Tabs,
     Text,
-    Tooltip,
+    Tooltip, useBreakpointValue,
     useColorModeValue,
     useDisclosure,
 } from "@chakra-ui/react";
@@ -71,6 +71,7 @@ export default function TBPDrawer() {
     const backgroundColor = useColorModeValue("gray.50", "gray.700");
     const footerColor = useColorModeValue("gray.700", "gray.500");
     const colorScheme = useColorModeValue("blackAlpha", "blackAlpha");
+    const isDesktop = useBreakpointValue({sm: false, md: false, lg: true})
 
     return (
         <>
@@ -95,22 +96,22 @@ export default function TBPDrawer() {
                         <Tabs visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
                             <TabList borderBottom={"1px solid"} pb={2}>
                                 <Tab>
-                                    <Tooltip hasArrow placement="top" label="Pages">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Pages">
                                         <span><ImStack /></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip hasArrow placement="top" label="Edit page details">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Edit page details">
                                         <span><EditIcon /></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab disabled={true}>
-                                    <Tooltip  hasArrow placement="top" label="Publish to network">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Publish to network">
                                         <span><ImFeed/></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip hasArrow placement="top" label="Create page">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Create page">
                                         <span><AddIcon/></span>
                                     </Tooltip>
                                 </Tab>

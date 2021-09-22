@@ -10,7 +10,7 @@ import {
     StatHelpText,
     StatLabel,
     StatNumber,
-    Text, useColorModeValue, useEditable, useEditableControls,
+    Text, useBreakpointValue, useColorModeValue, useEditable, useEditableControls,
 } from "@chakra-ui/react";
 import React, {useState} from "react";
 import BPageService from "../../services/BPageService";
@@ -28,8 +28,8 @@ export default function PageView({changeTab, page, setPage}: Props) {
     const [pageTitle, setPageTitle] = useState(page.title);
     const [pageId, setPageId] = useState(page.id);
 
-    const linkColor = useColorModeValue("blue.600", "cyan.400")
-
+    const linkColor = useColorModeValue("blue.600", "cyan.400");
+    const isMobile = useBreakpointValue({sm: true, md: false, lg: false});
 
     let date;
     if(typeof page.modified === "string") {
@@ -66,7 +66,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
                         <StatHelpText>updated</StatHelpText>
                     </Stat>
 
-                    <Box borderTopStartRadius={"none"}  borderWidth={1} p={4}>
+                    <Box borderTopStartRadius={"none"}  overflow={"hidden"} borderWidth={1} p={4}>
                         <FormControl id="title" isRequired isDisabled={page.address !== undefined}>
                             <FormLabel>Title</FormLabel>
                             <Input
@@ -77,7 +77,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
                             />
                         </FormControl>
 
-                        <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={8} mb={12}>
+                        <Grid templateColumns={"repeat(2, 1fr)"} gap={4} mt={8} mb={12}>
 
                             <GridItem visibility={(page.address !== undefined) ? "hidden" : "visible"} color={linkColor} cursor={"pointer"} onClick={() => changeTab(2)}>publish settings</GridItem>
                             <GridItem visibility={(page.address !== undefined) ? "hidden" : "visible"} color={linkColor} cursor={"pointer"} onClick={() => changeTab(2)}><ArrowForwardIcon/></GridItem>
@@ -86,7 +86,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
                             <GridItem><CheckCircleIcon color={(page.address === undefined) ? "gray.300" : "green.400"}/></GridItem>
 
                             <GridItem>address:</GridItem>
-                            <GridItem><Kbd>{page.address === undefined ? "---" : "0xb772ce9f14fc7c7db0d4525adb9349fbd7ce456a"}</Kbd></GridItem>
+                            <GridItem><Kbd d="inline" isTruncated={isMobile}>{page.address === undefined ? "---" : "0xb772ce9f14fc7c7db0d4525adb9349fbd7ce456a"}</Kbd></GridItem>
 
                         </Grid>
 
