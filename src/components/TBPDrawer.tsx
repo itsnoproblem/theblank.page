@@ -7,7 +7,6 @@ import {
     DrawerCloseButton,
     DrawerContent,
     DrawerFooter,
-    DrawerHeader,
     DrawerOverlay,
     HStack,
     Image,
@@ -17,33 +16,45 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
-    Text, Tooltip,
+    Text,
+    Tooltip,
+    useBreakpointValue,
     useColorModeValue,
     useDisclosure,
 } from "@chakra-ui/react";
-import {AddIcon, CopyIcon, EditIcon} from "@chakra-ui/icons";
-import {ImStack, ImQrcode, ImFeed} from "react-icons/all";
+import {AddIcon, ArrowBackIcon, EditIcon} from "@chakra-ui/icons";
+import {ImFeed, ImStack} from "react-icons/im";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";
 import {EditorContext} from "../editor-context";
 import BPageService from "../services/BPageService";
-import RandomImage from "./RandomImage";
 import {EditorState} from 'draft-js';
-import EthereumQRCode from "./EthereumQRCode";
 import Publisher from "./drawer/Publisher";
+import {useEthers} from "@usedapp/core";
 
 
 export default function TBPDrawer() {
+    const TAB_PAGELIST = 0;
+    const TAB_EDITPAGE = 1;
+    const TAB_PUBLISHER = 2;
+    const TAB_NEWPAGE = 3;
+
     const {isOpen, onOpen, onClose} = useDisclosure();
-    const [tabIndex, setTabIndex] = React.useState(0);
+    const [tabIndex, setTabIndex] = React.useState(TAB_PAGELIST);
     const {page, setPage} = useContext(EditorContext);
+    const {activateBrowserWallet, account } = useEthers();
 
     const changeTab = (idx) => {
-        setTabIndex(idx);
+        if(idx === TAB_NEWPAGE) {
+            handleAddPage();
+        }
+        else {
+            setTabIndex(idx);
+        }
     }
 
-    const handleAddPage = (e) => {
+    const handleAddPage = () => {
         let es = EditorState.createEmpty();
         let pg = {
             title: "New Page",
@@ -52,14 +63,16 @@ export default function TBPDrawer() {
             modified: new Date()
         }
 
-        pg.id = BPageService.create(pg);
+        pg.id = BPageService.create(account, pg);
         setPage(pg);
-        setTabIndex(0);
+        setTabIndex(1);
     }
 
     const backgroundColor = useColorModeValue("gray.50", "gray.700");
     const footerColor = useColorModeValue("gray.700", "gray.500");
     const colorScheme = useColorModeValue("blackAlpha", "blackAlpha");
+    const isDesktop = useBreakpointValue({sm: false, md: false, lg: true})
+
     return (
         <>
             <Logo onClick={onOpen} />
@@ -70,32 +83,32 @@ export default function TBPDrawer() {
                 onClose={onClose}
             >
                 <DrawerOverlay />
-                <DrawerContent backgroundColor={backgroundColor}>
-                    <DrawerCloseButton colorScheme={colorScheme}/>
-                    <DrawerHeader>
-
-                    </DrawerHeader>
-                    <DrawerBody>
-                        <Tabs h="100%" pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={(index) => setTabIndex(index)}>
-                            <TabList mb={4} borderBottom={"1px solid"} pb={2}>
+                <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
+                    <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
+                    <DrawerBody pt={5}>
+                        <Box mt={"50%"} textAlign={"center"} h={"50%"} d={account ? "none" : "block"} visibility={(account ? "hidden" : "visible")}>
+                            <Text fontSize={"lg"}>Please connect a wallet to continue</Text>
+                        </Box>
+                        <Tabs d={account ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                            <TabList borderBottom={"1px solid"} pb={4}>
                                 <Tab>
-                                    <Tooltip hasArrow placement="top" label="Pages">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Drafts">
                                         <span><ImStack /></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip hasArrow placement="top" label="Edit page details">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Details">
                                         <span><EditIcon /></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab disabled={true}>
-                                    <Tooltip  hasArrow placement="top" label="Publish to network">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Publish to network">
                                         <span><ImFeed/></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip hasArrow placement="top" label="Create page">
-                                        <span><AddIcon onClick={handleAddPage}/></span>
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="New page">
+                                        <span><AddIcon/></span>
                                     </Tooltip>
                                 </Tab>
                             </TabList>

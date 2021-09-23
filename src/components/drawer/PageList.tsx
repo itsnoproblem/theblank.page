@@ -11,13 +11,15 @@ import React, {
     GridItem,
     HStack,
     SimpleGrid,
-    Text, Tooltip,
+    Text,
+    Tooltip,
     useColorModeValue
 } from "@chakra-ui/react"
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
 import {DeleteIcon} from "@chakra-ui/icons";
 import {useRef, useState} from "react";
+import {useEthers} from "@usedapp/core";
 
 type Props = {
     changeTab: any;
@@ -26,8 +28,9 @@ type Props = {
 }
 
 export default function PageList({changeTab, page, setPage}: Props) {
-    const data = BPageService.getAll();
-    const [pages, setPages] = useState(data);
+    const {account} = useEthers();
+    const data = BPageService.getAll(account);
+    const [, setPages] = useState(data);
     const [isOpen, setIsOpen] = useState(false);
     const [deleteCandidate, setDeleteCandidate] = useState(0);
 
@@ -39,7 +42,7 @@ export default function PageList({changeTab, page, setPage}: Props) {
     const cancelRef = useRef();
 
     const handleEditPage = (id) => {
-        const pg = BPageService.get(id)
+        const pg = BPageService.get(account, id)
         if(pg !== undefined) {
             setPage(pg);
             changeTab(1);
@@ -51,7 +54,7 @@ export default function PageList({changeTab, page, setPage}: Props) {
     }
 
     const handleSelectPage = (id) => {
-        const pg = BPageService.get(id)
+        const pg = BPageService.get(account, id)
         if(pg !== undefined) {
             setPage(pg);
             console.log("Loaded page " + id);
@@ -68,15 +71,15 @@ export default function PageList({changeTab, page, setPage}: Props) {
 
     const handleDelete = () => {
         if(deleteCandidate > 0) {
-            const deleted = BPageService.remove(deleteCandidate);
+            const deleted = BPageService.remove(account, deleteCandidate);
             if(deleted) {
                 console.log("Deleted " + deleteCandidate);
                 if(page.id === deleteCandidate) {
-                    let pg = BPageService.latest();
+                    let pg = BPageService.latest(account);
                     setPage(pg);
                 }
                 else {
-                    setPages(BPageService.getAll())
+                    setPages(BPageService.getAll(account))
                 }
             }
         }

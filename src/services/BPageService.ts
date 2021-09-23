@@ -1,27 +1,27 @@
 import BPage, {blankPage} from "./Page";
 
-const getAll = (): Map<number, BPage> => {
-    let all = pagesById();
+const getAll = (account): Map<number, BPage> => {
+    let all = pagesById(account);
     // @ts-ignore
     const sorted = new Map([...Array.from(all.entries())].sort(([x, a], [y, b]) => new Date(b.modified) - new Date(a.modified)))
     return sorted;
 };
 
-export const get = (id: number): BPage|undefined => {
-    let allPages = pagesById();
+export const get = (account, id: number): BPage|undefined => {
+    let allPages = pagesById(account);
     return allPages.get(id);
 };
 
-export const create = (pg: BPage): number => {
-    pg.id = nextId();
-    let allPages = pagesById()
+export const create = (account, pg: BPage): number => {
+    pg.id = nextId(account);
+    let allPages = pagesById(account);
     allPages.set(pg.id, pg);
-    save(allPages);
+    save(account, allPages);
     return pg.id;
 };
 
-export const update = (pg: BPage): boolean => {
-    let allPages = pagesById();
+export const update = (account, pg: BPage): boolean => {
+    let allPages = pagesById(account);
     if(!allPages.has(pg.id)) {
         console.error("Page not found for update "+pg.id);
         return false;
@@ -29,59 +29,70 @@ export const update = (pg: BPage): boolean => {
 
     pg.modified = new Date();
     allPages.set(pg.id, pg);
-    return save(allPages);
+    return save(account, allPages);
 };
 
-export const remove = (id: number): boolean => {
-    let allPages = pagesById();
+export const remove = (account, id: number): boolean => {
+    let allPages = pagesById(account);
     allPages.delete(id);
-    return save(allPages);
+    return save(account, allPages);
 }
 
-const save = (pages: Map<number, BPage>): boolean => {
+const StorageKey = (account): string => {
+    if(account === undefined || account === null) {
+        account = "0x0"
+    }
+    return "pagesById" + account;
+}
+
+const save = (account, pages: Map<number, BPage>): boolean => {
     const raw = JSON.stringify(Array.from(pages.entries()));
-    localStorage.setItem("pagesById", raw);
+    localStorage.setItem(StorageKey(account), raw);
     return true;
 }
 
-const pagesById = (): Map<number, BPage> => {
+const pagesById = (account): Map<number, BPage> => {
     let allPages;
-    let raw = localStorage.getItem("pagesById")
+    let raw = localStorage.getItem(StorageKey(account));
     if(raw) {
         allPages = JSON.parse(raw);
     }
     else {
-        allPages = []
+        allPages = [];
     }
 
     return new Map<number, BPage>(allPages);
 }
 
-const latest = (): BPage => {
-    const all = getAll();
+const latest = (account): BPage => {
+    const all = getAll(account);
     if(all.size < 1) {
         let pg = blankPage();
-        pg.id = create(pg);
+        pg.id = create(account, pg);
         return pg;
     }
 
     return all.entries().next().value[1];
 }
 
-const nextId = () => {
-    let currentId = localStorage.getItem("maxId") || "0";
+const nextId = (account) => {
+    if(account === undefined || account === null) {
+        account = "0x0"
+    }
+    const key = StorageKey(account) + "maxId";
+    let currentId = localStorage.getItem(key) || "0";
     let max = parseInt(currentId) + 1;
-    localStorage.setItem("maxId", max.toString());
+    localStorage.setItem(key, max.toString());
     return max;
 }
 
 const BPageService = {
-    getAll,
-    get,
-    create,
-    update,
-    latest,
-    remove,
+    getAll: getAll,
+    get: get,
+    create: create,
+    update: update,
+    latest: latest,
+    remove: remove,
 };
 
 export default BPageService;

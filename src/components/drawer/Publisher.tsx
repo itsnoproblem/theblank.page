@@ -1,54 +1,73 @@
 import {
-    Box, Button,
-    Code, Flex,
+    Box,
+    Button, Checkbox, Divider,
+    Flex,
     FormControl,
     FormHelperText,
     FormLabel,
-    Grid,
-    GridItem,
-    HStack,
-    IconButton,
     Input,
     InputGroup,
-    InputRightAddon, NumberDecrementStepper, NumberIncrementStepper,
-    NumberInput, NumberInputField, NumberInputStepper, SimpleGrid,
-    Slider,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack, Spacer,
-    Stack,
-    Switch,
-    Text,
-    Tooltip,
-    VStack
+    InputRightAddon,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    SimpleGrid,
+    Spacer,
+    Switch, Text
 } from "@chakra-ui/react";
-import RandomImage from "../RandomImage";
-import EthereumQRCode from "../EthereumQRCode";
-import React from "react";
+import React, {useContext, useRef, useState} from "react";
 import '@fontsource/roboto-mono';
-import {ArrowForwardIcon, ArrowRightIcon} from "@chakra-ui/icons";
+import {ArrowForwardIcon} from "@chakra-ui/icons";
+import {EditorContext} from "../../editor-context";
 
 
 const Publisher = () => {
-    const defaultRoyalty = 1.5
-    const [royaltyValue, setRoyaltyValue] = React.useState(defaultRoyalty)
-    const handleRoyaltyChange = (value) => setRoyaltyValue(value)
+    const defaultRoyalty = 1.5;
+    const defaultForkingFee = 1.0;
+
+    const [royaltyValue, setRoyaltyValue] = useState(defaultRoyalty);
+    const [maxMintable, setMaxMintable] = useState(100);
+    const [allowForks, setAllowForks] = useState(false);
+    const [limitedEdition, setLimitedEdition] = useState(false);
+    const [forkingFee, setForkingFee] = useState(defaultForkingFee);
+    const {page, setPage} = useContext(EditorContext)
+
+    const handleRoyaltyChange = (value) => setRoyaltyValue(value);
+    const handleMaxMintableChange = (value) => setMaxMintable(value);
+    const handleForkingFeeChange = (value) => {
+        setForkingFee(value);
+    }
+    const handleAllowForksChange = (value) => {
+        console.log("allow forks", value)
+        setAllowForks(value)
+    };
+    const handleLimitedEditionChange = (value) => {
+        console.log("limitedEdition", value)
+        setLimitedEdition(value)
+    };
 
     return (
         <Flex h="100%" flexDirection={"column"} mb={"30"}>
+            <Box>
+                <Text fontSize={"4xl"} lineHeight={"1.1em"}>{page.title}</Text>
+                <Divider mb={6} mt={2}/>
+            </Box>
             <Box mb={12}>
                 <SimpleGrid columns={[1,2]} spacing={12}>
 
-                    {/* row 1 */}
-                    <FormControl id="floor-price">
+                    {/* floor price */}
+                    <FormControl id="floor-price" isRequired={true}>
                         <FormLabel>Floor Price</FormLabel>
                         <InputGroup size={"md"}>
-                            <Input id={"floor-price"} placeholder={"0.01"}/>
+                            <Input id={"floor-price"} placeholder={"0.01"} />
                             <InputRightAddon>ETH</InputRightAddon>
                         </InputGroup>
                         <FormHelperText>The lowest price you will accept for an edition of this work.</FormHelperText>
                     </FormControl>
 
+                    {/* royalty */}
                     <FormControl id={"royalty"}>
                         <FormLabel>Royalty (%)</FormLabel>
                         <Flex>
@@ -72,20 +91,62 @@ const Publisher = () => {
                         <FormHelperText>The percentage of the price that you will receive for the sale of this work</FormHelperText>
                     </FormControl>
 
-                    {/* row 2 */}
-                    <FormControl id="allow-forks">
+                    {/* Allow Forks */}
+                    <FormControl>
                         <FormLabel>Allow Forks?</FormLabel>
-                        <Switch id={"allow-forks"}/>
+                        <Switch id="allow-forks"
+                                defaultChecked={allowForks}
+                                onChange={() => handleAllowForksChange(!allowForks) }
+                        />
                         <FormHelperText>Enable this if you want to allow others to create derivatives of this work.</FormHelperText>
                     </FormControl>
 
+                    {/* forking fee */}
                     <FormControl id="fork-fee">
                         <FormLabel>Forking Fee</FormLabel>
                         <InputGroup size={"md"}>
-                            <Input id={"fork-fee"} placeholder={"0.50"}/>
+                            <NumberInput>
+                                <NumberInputField  value={forkingFee} onChange={handleForkingFeeChange} textAlign={"right"} id={"fork-fee"} placeholder={"0.50"} disabled={!allowForks}/>
+                            </NumberInput>å
                             <InputRightAddon>ETH</InputRightAddon>
                         </InputGroup>
-                        <FormHelperText>A one-time fee you collect when someone forks this work.</FormHelperText>
+                        <FormHelperText>
+                            A one-time fee you collect when someone forks this work.
+                        </FormHelperText>
+                    </FormControl>
+
+                    {/* limited edition */}
+                    <FormControl>
+                        <FormLabel>Limited Edition?</FormLabel>
+                        <Switch id={"limited-edition"}
+                                defaultChecked={limitedEdition}
+                                onChange={() => handleLimitedEditionChange(!limitedEdition)}
+                        />
+                        <FormHelperText>
+                            Enable this to limit the number of editions that can be minted
+                        </FormHelperText>
+                    </FormControl>
+
+                    {/* max editions */}
+                    <FormControl>
+                        <FormLabel>Max editions that can be minted</FormLabel>
+                        <Flex>
+                            <NumberInput
+                                id="max-mintable"
+                                step={5}
+                                maxW="100px"
+                                mr="2rem"
+                                value={maxMintable}
+                                onChange={handleMaxMintableChange}
+                                isDisabled={!limitedEdition}
+                            >
+                                <NumberInputField disabled={!limitedEdition}/>
+                                <NumberInputStepper visibility={(!limitedEdition) ? "hidden" : "visible"}>
+                                    <NumberIncrementStepper/>
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                        </Flex>
                     </FormControl>
 
                 </SimpleGrid>
