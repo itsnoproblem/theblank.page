@@ -4,11 +4,13 @@ import {convertFromRaw, convertToRaw, Editor, EditorState, RichUtils} from 'draf
 import {useDebouncedCallback} from 'use-debounce';
 import BPageService from '../services/BPageService'
 import {EditorContext} from "../editor-context";
+import {useEthers} from "@usedapp/core";
 
 export const TBPEditor = () => {
     let initialState;
     const editor = useRef(null);
     const {page, setPage} = useContext(EditorContext);
+    const {account} = useEthers();
 
     const newPage = () => {
         initialState = EditorState.createEmpty();
@@ -21,7 +23,7 @@ export const TBPEditor = () => {
             modified: new Date()
         }
 
-        pg.id = BPageService.create(pg);
+        pg.id = BPageService.create(account, pg);
         setPage(pg);
     }
 
@@ -86,9 +88,9 @@ export const TBPEditor = () => {
             if(raw !== page.content) {
                 page.content = raw;
                 if(page.id < 1) {
-                    page.id = BPageService.create(page);
+                    page.id = BPageService.create(account, page);
                 } else {
-                    BPageService.update(page);
+                    BPageService.update(account, page);
 
                 }
 

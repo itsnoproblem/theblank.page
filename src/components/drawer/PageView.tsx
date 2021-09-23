@@ -17,6 +17,7 @@ import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
 import {ArrowForwardIcon, CheckCircleIcon, CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
 import {zip} from "lodash";
+import {useEthers} from "@usedapp/core";
 
 type Props = {
     changeTab: any;
@@ -25,6 +26,7 @@ type Props = {
 }
 
 export default function PageView({changeTab, page, setPage}: Props) {
+    const {account} = useEthers();
     const [pageTitle, setPageTitle] = useState(page.title);
     const [pageId, setPageId] = useState(page.id);
 
@@ -51,7 +53,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
 
     const save = () => {
         page.title = pageTitle;
-        BPageService.update(page);
+        BPageService.update(account, page);
         setPage(page);
         changeTab(0);
     }

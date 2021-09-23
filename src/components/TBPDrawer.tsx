@@ -63,7 +63,7 @@ export default function TBPDrawer() {
             modified: new Date()
         }
 
-        pg.id = BPageService.create(pg);
+        pg.id = BPageService.create(account, pg);
         setPage(pg);
         setTabIndex(1);
     }

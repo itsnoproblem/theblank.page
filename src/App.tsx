@@ -7,9 +7,11 @@ import {EditorContext} from "./editor-context";
 import Header from "./components/Header";
 import {TBPEditor} from "./components/TBPEditor";
 import BPageService from "./services/BPageService";
+import {useEthers} from "@usedapp/core";
 
 export default function App() {
-    const [page, setPage] = useState(BPageService.latest());
+    const {account} = useEthers()
+    const [page, setPage] = useState(BPageService.latest(account));
     const value = { page, setPage }
 
     let chakraProvider =
