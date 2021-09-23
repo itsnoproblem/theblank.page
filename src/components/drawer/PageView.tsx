@@ -1,22 +1,25 @@
 import {
     Badge,
     Box,
-    Button, ButtonGroup,
-    Divider, Flex,
+    Button,
     FormControl,
-    FormLabel, Grid, GridItem, IconButton,
-    Input, Kbd, Link, List, ListItem, SimpleGrid,
+    FormLabel,
+    Grid,
+    GridItem,
+    Input,
+    Kbd,
     Stat,
     StatHelpText,
     StatLabel,
     StatNumber,
-    Text, useBreakpointValue, useColorModeValue, useEditable, useEditableControls,
+    Text,
+    useBreakpointValue,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import React, {useState} from "react";
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
-import {ArrowForwardIcon, CheckCircleIcon, CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
-import {zip} from "lodash";
+import {ArrowForwardIcon, CheckCircleIcon} from "@chakra-ui/icons";
 import {useEthers} from "@usedapp/core";
 
 type Props = {
@@ -65,7 +68,7 @@ export default function PageView({changeTab, page, setPage}: Props) {
                     <Stat>
                         <StatLabel>{modTime}</StatLabel>
                         <StatNumber>{modDate}</StatNumber>
-                        <StatHelpText>updated</StatHelpText>
+                        <StatHelpText>{page.address === undefined ? "draft" : "published"}</StatHelpText>
                     </Stat>
 
                     <Box borderTopStartRadius={"none"}  overflow={"hidden"} borderWidth={1} p={4}>

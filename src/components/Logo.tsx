@@ -1,6 +1,5 @@
 import React from "react";
 import {Box, Tooltip, useBreakpointValue} from '@chakra-ui/react'
-import {useTheme} from "@emotion/react";
 
 type Props = {
     onClick: any,

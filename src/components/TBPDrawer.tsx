@@ -7,7 +7,6 @@ import {
     DrawerCloseButton,
     DrawerContent,
     DrawerFooter,
-    DrawerHeader,
     DrawerOverlay,
     HStack,
     Image,
@@ -18,11 +17,12 @@ import {
     TabPanels,
     Tabs,
     Text,
-    Tooltip, useBreakpointValue,
+    Tooltip,
+    useBreakpointValue,
     useColorModeValue,
     useDisclosure,
 } from "@chakra-ui/react";
-import {AddIcon, EditIcon} from "@chakra-ui/icons";
+import {AddIcon, ArrowBackIcon, EditIcon} from "@chakra-ui/icons";
 import {ImFeed, ImStack} from "react-icons/im";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
@@ -84,24 +84,20 @@ export default function TBPDrawer() {
             >
                 <DrawerOverlay />
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
-
-                    <DrawerCloseButton colorScheme={colorScheme}/>
-                    <DrawerHeader>
-
-                    </DrawerHeader>
-                    <DrawerBody>
-                        <Box visibility={(account ? "hidden" : "visible")}>
+                    <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
+                    <DrawerBody pt={5}>
+                        <Box mt={"50%"} textAlign={"center"} h={"50%"} d={account ? "none" : "block"} visibility={(account ? "hidden" : "visible")}>
                             <Text fontSize={"lg"}>Please connect a wallet to continue</Text>
                         </Box>
-                        <Tabs visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
-                            <TabList borderBottom={"1px solid"} pb={2}>
+                        <Tabs d={account ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                            <TabList borderBottom={"1px solid"} pb={4}>
                                 <Tab>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Pages">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Drafts">
                                         <span><ImStack /></span>
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Edit page details">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Details">
                                         <span><EditIcon /></span>
                                     </Tooltip>
                                 </Tab>
@@ -111,7 +107,7 @@ export default function TBPDrawer() {
                                     </Tooltip>
                                 </Tab>
                                 <Tab>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Create page">
+                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="New page">
                                         <span><AddIcon/></span>
                                     </Tooltip>
                                 </Tab>

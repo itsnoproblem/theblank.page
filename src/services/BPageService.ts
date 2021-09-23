@@ -1,5 +1,4 @@
 import BPage, {blankPage} from "./Page";
-import {useEthers} from "@usedapp/core";
 
 const getAll = (account): Map<number, BPage> => {
     let all = pagesById(account);
