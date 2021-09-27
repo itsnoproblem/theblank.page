@@ -91,7 +91,7 @@ export default function TBPDrawer() {
                              visibility={(account && chainId === 3 ? "hidden" : "visible")}
                         >
                             <Text fontSize={"lg"}>
-                                Please connect an account to the <b>ropesten network</b> to continue
+                                Please connect an account to the <b>ropsten network</b> to continue
                             </Text>
                         </Box>
                         <Tabs d={account && chainId === 3 ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
