@@ -48,7 +48,7 @@ export default function TBPDrawer() {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [tabIndex, setTabIndex] = React.useState(TAB_PAGELIST);
     const {page, setPage} = useContext(EditorContext);
-    const {activateBrowserWallet, account } = useEthers();
+    const {chainId, account } = useEthers();
 
     const changeTab = (idx) => {
         if(idx === TAB_NEWPAGE) {
@@ -86,12 +86,15 @@ export default function TBPDrawer() {
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
                     <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
                     <DrawerBody pt={5}>
-                        <Box mt={"50%"} textAlign={"center"} h={"50%"} d={account ? "none" : "block"} visibility={(account ? "hidden" : "visible")}>
+                        <Box mt={"50%"} textAlign={"center"} h={"50%"}
+                             d={account && chainId === 3 ? "none" : "block"}
+                             visibility={(account && chainId === 3 ? "hidden" : "visible")}
+                        >
                             <Text fontSize={"lg"}>
-                                Please connect an account to continue
+                                Please connect an account to the <b>ropesten network</b> to continue
                             </Text>
                         </Box>
-                        <Tabs d={account ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                        <Tabs d={account && chainId === 3 ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
                             <TabList borderBottom={"1px solid"} pb={4}>
                                 <Tab>
                                     <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Drafts">
