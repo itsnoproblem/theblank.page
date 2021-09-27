@@ -90,7 +90,7 @@ export default function PageView({changeTab}: Props) {
                             <GridItem><CheckCircleIcon color={(page.address === undefined) ? "gray.300" : "green.400"}/></GridItem>
 
                             <GridItem>address:</GridItem>
-                            <GridItem><Kbd d="inline" isTruncated={isMobile}>{page.address === undefined ? "---" : "0xb772ce9f14fc7c7db0d4525adb9349fbd7ce456a"}</Kbd></GridItem>
+                            <GridItem><Kbd d="inline" isTruncated={isMobile}>{page.address === undefined ? "---" : page.address}</Kbd></GridItem>
 
                         </Grid>
 
