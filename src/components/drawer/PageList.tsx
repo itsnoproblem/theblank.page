@@ -18,21 +18,21 @@ import React, {
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
 import {DeleteIcon} from "@chakra-ui/icons";
-import {useRef, useState} from "react";
+import {useContext, useRef, useState} from "react";
 import {useEthers} from "@usedapp/core";
+import {EditorContext} from "../../editor-context";
 
 type Props = {
     changeTab: any;
-    page: BPage;
-    setPage: any;
 }
 
-export default function PageList({changeTab, page, setPage}: Props) {
+export default function PageList({changeTab}: Props) {
     const {account} = useEthers();
     const data = BPageService.getAll(account);
     const [, setPages] = useState(data);
     const [isOpen, setIsOpen] = useState(false);
     const [deleteCandidate, setDeleteCandidate] = useState(0);
+    const {page, setPage} = useContext(EditorContext)
 
     const onClose = () => {
         setIsOpen(false);

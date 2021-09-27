@@ -1,4 +1,5 @@
-import { ContentState } from 'draft-js'
+import {ContentState} from 'draft-js'
+
 export default interface BPage {
     id?: any;
     title: string;
@@ -10,12 +11,13 @@ export default interface BPage {
     royaltyPercent?: number;
 }
 
-export const blankPage = () => {
+export const blankPage = (account) => {
     const bp: BPage = {
         title: "new page",
         modified: new Date(),
         id: null,
         content: null,
+        account: account
     }
     return bp;
 }

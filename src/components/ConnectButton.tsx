@@ -2,8 +2,10 @@
 import {Box, Button, Text, useColorModeValue} from "@chakra-ui/react";
 import {useEtherBalance, useEthers} from "@usedapp/core";
 import {formatEther} from "@ethersproject/units";
-import React from "react";
+import React, {useContext} from "react";
 import './ConnectButton.css';
+import {EditorContext} from "../editor-context";
+import BPageService from "../services/BPageService";
 
 
 type Props = {
@@ -11,11 +13,14 @@ type Props = {
 }
 
 export default function ConnectButton({ handleOpenModal }: Props) {
-    const {activateBrowserWallet, account } = useEthers();
+    const {activateBrowserWallet, deactivate, account } = useEthers();
+
     const etherBalance = useEtherBalance(account);
+    const {page, setPage} = useContext(EditorContext)
 
     function handleConnectWallet() {
         activateBrowserWallet();
+        setPage(BPageService.latest(account))
     }
 
     const outerBg = useColorModeValue(

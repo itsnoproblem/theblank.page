@@ -10,7 +10,7 @@ export const TBPEditor = () => {
     let initialState;
     const editor = useRef(null);
     const {page, setPage} = useContext(EditorContext);
-    const {account} = useEthers();
+    const { account } = useEthers()
 
     const newPage = () => {
         initialState = EditorState.createEmpty();
@@ -54,6 +54,7 @@ export const TBPEditor = () => {
     }
 
     useEffect(() => {
+        let initialState;
         const raw = JSON.parse(page.content);
         if(raw !== null && Array.isArray(raw.blocks)) {
             initialState = EditorState.createWithContent(convertFromRaw(raw))

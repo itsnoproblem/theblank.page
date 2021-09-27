@@ -12,12 +12,25 @@ import {useEthers} from "@usedapp/core";
 export default function App() {
     const {account} = useEthers()
     const [page, setPage] = useState(BPageService.latest(account));
-    const value = { page, setPage }
+    const pageState = { page, setPage }
+
+    const handleAccountsChanged = () => {
+        console.log(account)
+    }
+
+    React.useEffect(() => {
+        window.addEventListener('accountsChanged', () => { handleAccountsChanged() })
+
+        // cleanup this component
+        return () => {
+            window.removeEventListener('accountsChanged', () => { handleAccountsChanged() });
+        };
+    }, [handleAccountsChanged]);
 
     let chakraProvider =
     <>
         <ChakraProvider theme={theme}>
-            <EditorContext.Provider value={value}>
+            <EditorContext.Provider value={pageState}>
                 <Header/>
                 <TBPEditor/>
             </EditorContext.Provider>

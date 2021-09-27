@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ChainId, Config, DAppProvider} from "@usedapp/core";
 import theme from './theme'
-import { ColorModeScript } from '@chakra-ui/react'
+import {ColorModeScript} from '@chakra-ui/react'
 
 const config: Config = {
     readOnlyChainId: ChainId.Mainnet,
