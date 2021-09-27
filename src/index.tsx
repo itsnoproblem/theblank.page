@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Fathom from 'fathom-react';
 import reportWebVitals from './reportWebVitals';
 import {ChainId, Config, DAppProvider} from "@usedapp/core";
 import theme from './theme'
-import { ColorModeScript } from '@chakra-ui/react'
+import {ColorModeScript} from '@chakra-ui/react'
 
 const config: Config = {
     readOnlyChainId: ChainId.Mainnet,
@@ -18,10 +19,12 @@ const config: Config = {
 
 ReactDOM.render(
   <React.StrictMode>
-    <DAppProvider config={config}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      <App />
-    </DAppProvider>
+      <Fathom siteId={"VSLRANZD"}>
+        <DAppProvider config={config}>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <App />
+        </DAppProvider>
+      </Fathom>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -67,7 +67,7 @@ const pagesById = (account): Map<number, BPage> => {
 const latest = (account): BPage => {
     const all = getAll(account);
     if(all.size < 1) {
-        let pg = blankPage();
+        let pg = blankPage(account);
         pg.id = create(account, pg);
         return pg;
     }

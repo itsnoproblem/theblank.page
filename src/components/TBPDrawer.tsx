@@ -40,14 +40,19 @@ export default function TBPDrawer() {
     const TAB_PUBLISHER = 2;
     const TAB_NEWPAGE = 3;
 
+    const backgroundColor = useColorModeValue("gray.50", "gray.700");
+    const footerColor = useColorModeValue("gray.700", "gray.500");
+    const colorScheme = useColorModeValue("blackAlpha", "blackAlpha");
+    const isDesktop = useBreakpointValue({sm: false, md: false, lg: true})
+
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [tabIndex, setTabIndex] = React.useState(TAB_PAGELIST);
     const {page, setPage} = useContext(EditorContext);
-    const {activateBrowserWallet, account } = useEthers();
+    const {chainId, account } = useEthers();
 
     const changeTab = (idx) => {
         if(idx === TAB_NEWPAGE) {
-            handleAddPage();
+            setTabIndex(TAB_EDITPAGE);
         }
         else {
             setTabIndex(idx);
@@ -68,11 +73,6 @@ export default function TBPDrawer() {
         setTabIndex(1);
     }
 
-    const backgroundColor = useColorModeValue("gray.50", "gray.700");
-    const footerColor = useColorModeValue("gray.700", "gray.500");
-    const colorScheme = useColorModeValue("blackAlpha", "blackAlpha");
-    const isDesktop = useBreakpointValue({sm: false, md: false, lg: true})
-
     return (
         <>
             <Logo onClick={onOpen} />
@@ -86,10 +86,15 @@ export default function TBPDrawer() {
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
                     <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
                     <DrawerBody pt={5}>
-                        <Box mt={"50%"} textAlign={"center"} h={"50%"} d={account ? "none" : "block"} visibility={(account ? "hidden" : "visible")}>
-                            <Text fontSize={"lg"}>Please connect a wallet to continue</Text>
+                        <Box mt={"50%"} textAlign={"center"} h={"50%"}
+                             d={account && chainId === 3 ? "none" : "block"}
+                             visibility={(account && chainId === 3 ? "hidden" : "visible")}
+                        >
+                            <Text fontSize={"lg"}>
+                                Please connect an account to the <b>ropesten network</b> to continue
+                            </Text>
                         </Box>
-                        <Tabs d={account ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                        <Tabs d={account && chainId === 3 ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
                             <TabList borderBottom={"1px solid"} pb={4}>
                                 <Tab>
                                     <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Drafts">
@@ -106,7 +111,7 @@ export default function TBPDrawer() {
                                         <span><ImFeed/></span>
                                     </Tooltip>
                                 </Tab>
-                                <Tab>
+                                <Tab onClick={handleAddPage}>
                                     <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="New page">
                                         <span><AddIcon/></span>
                                     </Tooltip>
@@ -116,20 +121,12 @@ export default function TBPDrawer() {
 
                                 {/* Page LIst */}
                                 <TabPanel>
-                                    <EditorContext.Consumer>
-                                        {({page, setPage}) => (
-                                            <PageList page={page} setPage={setPage} changeTab={changeTab}/>
-                                        )}
-                                    </EditorContext.Consumer>
+                                    <PageList changeTab={changeTab} />
                                 </TabPanel>
 
                                 {/* Page View */}
                                 <TabPanel>
-                                    <EditorContext.Consumer>
-                                        {({page, setPage}) => (
-                                            <PageView page={page} setPage={setPage} changeTab={changeTab}/>
-                                        )}
-                                    </EditorContext.Consumer>
+                                    <PageView changeTab={changeTab}/>
                                 </TabPanel>
 
                                 {/* publish on blockchain */}
