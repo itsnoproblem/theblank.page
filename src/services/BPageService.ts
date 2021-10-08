@@ -42,7 +42,7 @@ const StorageKey = (account): string => {
     if(account === undefined || account === null) {
         account = "0x0"
     }
-    return "pagesById" + account;
+    return "pagesById-v1.0-" + account;
 }
 
 const save = (account, pages: Map<number, BPage>): boolean => {
@@ -56,6 +56,7 @@ const pagesById = (account): Map<number, BPage> => {
     let raw = localStorage.getItem(StorageKey(account));
     if(raw) {
         allPages = JSON.parse(raw);
+
     }
     else {
         allPages = [];
