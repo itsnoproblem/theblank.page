@@ -31,7 +31,8 @@ import {EditorContext} from "../editor-context";
 import BPageService from "../services/BPageService";
 import {EditorState} from 'draft-js';
 import Publisher from "./drawer/Publisher";
-import {useEthers} from "@usedapp/core";
+import {ChainId, useEthers} from "@usedapp/core";
+import {blankPage} from "../services/Page";
 
 
 export default function TBPDrawer() {
@@ -60,14 +61,7 @@ export default function TBPDrawer() {
     }
 
     const handleAddPage = () => {
-        let es = EditorState.createEmpty();
-        let pg = {
-            title: "New Page",
-            id: -1,
-            content: JSON.stringify(es.getCurrentContent()),
-            modified: new Date()
-        }
-
+        let pg = blankPage(account);
         pg.id = BPageService.create(account, pg);
         setPage(pg);
         setTabIndex(1);
@@ -86,61 +80,63 @@ export default function TBPDrawer() {
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
                     <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
                     <DrawerBody pt={5}>
-                        <Box mt={"50%"} textAlign={"center"} h={"50%"}
-                             d={account && chainId === 3 ? "none" : "block"}
-                             visibility={(account && chainId === 3 ? "hidden" : "visible")}
-                        >
-                            <Text fontSize={"lg"}>
-                                Please connect an account to the <b>ropsten network</b> to continue
-                            </Text>
-                        </Box>
-                        <Tabs d={account && chainId === 3 ? "" : "none"} visibility={(account ? "visible" : "hidden")} pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
-                            <TabList borderBottom={"1px solid"} pb={4}>
-                                <Tab>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Drafts">
-                                        <span><ImStack /></span>
-                                    </Tooltip>
-                                </Tab>
-                                <Tab>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Details">
-                                        <span><EditIcon /></span>
-                                    </Tooltip>
-                                </Tab>
-                                <Tab disabled={true}>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Publish to network">
-                                        <span><ImFeed/></span>
-                                    </Tooltip>
-                                </Tab>
-                                <Tab onClick={handleAddPage}>
-                                    <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="New page">
-                                        <span><AddIcon/></span>
-                                    </Tooltip>
-                                </Tab>
-                            </TabList>
-                            <TabPanels h={"100%"}>
+                        {!account || chainId !== ChainId.Rinkeby &&
+                            <Box mt={"50%"} textAlign={"center"} h={"50%"}>
+                                <Text fontSize={"lg"}>
+                                    Please connect an account to the <b>rinkeby network</b> to continue
+                                </Text>
+                            </Box>
+                        }
+                        {account && chainId === ChainId.Rinkeby &&
+                            <Tabs pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
+                                <TabList borderBottom={"1px solid"} pb={4}>
+                                    <Tab>
+                                        <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Drafts">
+                                            <span><ImStack/></span>
+                                        </Tooltip>
+                                    </Tab>
+                                    <Tab>
+                                        <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="Details">
+                                            <span><EditIcon/></span>
+                                        </Tooltip>
+                                    </Tab>
+                                    <Tab disabled={true}>
+                                        <Tooltip isDisabled={!isDesktop} hasArrow placement="top"
+                                                 label="Publish to network">
+                                            <span><ImFeed/></span>
+                                        </Tooltip>
+                                    </Tab>
+                                    <Tab onClick={handleAddPage}>
+                                        <Tooltip isDisabled={!isDesktop} hasArrow placement="top" label="New page">
+                                            <span><AddIcon/></span>
+                                        </Tooltip>
+                                    </Tab>
+                                </TabList>
+                                <TabPanels h={"100%"}>
 
-                                {/* Page LIst */}
-                                <TabPanel>
-                                    <PageList changeTab={changeTab} />
-                                </TabPanel>
+                                    {/* Page LIst */}
+                                    <TabPanel>
+                                        <PageList changeTab={changeTab}/>
+                                    </TabPanel>
 
-                                {/* Page View */}
-                                <TabPanel>
-                                    <PageView changeTab={changeTab}/>
-                                </TabPanel>
+                                    {/* Page View */}
+                                    <TabPanel>
+                                        <PageView changeTab={changeTab}/>
+                                    </TabPanel>
 
-                                {/* publish on blockchain */}
-                                <TabPanel h={"100%"}>
-                                    <Publisher/>
-                                </TabPanel>
-                                {/*
-                                placeholder for new page
-                                */}
-                                <TabPanel>
+                                    {/* publish on blockchain */}
+                                    <TabPanel h={"100%"}>
+                                        <Publisher changeTab={changeTab}/>
+                                    </TabPanel>
+                                    {/*
+                                    placeholder for new page
+                                    */}
+                                    <TabPanel>
 
-                                </TabPanel>
-                            </TabPanels>
-                        </Tabs>
+                                    </TabPanel>
+                                </TabPanels>
+                            </Tabs>
+                        }
                     </DrawerBody>
 
                     <DrawerFooter alignItems={"center"}>

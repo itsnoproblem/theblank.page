@@ -14,25 +14,32 @@ import {
     NumberInputField,
     NumberInputStepper,
     SimpleGrid,
-    Spacer,
+    Spacer, Spinner,
     Switch, Text
 } from "@chakra-ui/react";
 import React, {useContext, useRef, useState} from "react";
 import '@fontsource/roboto-mono';
 import {ArrowForwardIcon} from "@chakra-ui/icons";
 import {EditorContext} from "../../editor-context";
+import {useContractCall, useEthers} from "@usedapp/core";
+import BPageService from "../../services/BPageService";
+import env from 'react-dotenv';
 
-
-const Publisher = () => {
+type Props = {
+    changeTab: any
+}
+const Publisher = ({changeTab}: Props) => {
     const defaultRoyalty = 1.5;
     const defaultForkingFee = 1.0;
 
+    const {account} = useEthers();
+    const [isPublishing, setIsPublishing] = useState(false);
     const [royaltyValue, setRoyaltyValue] = useState(defaultRoyalty);
     const [maxMintable, setMaxMintable] = useState(100);
     const [allowForks, setAllowForks] = useState(false);
     const [limitedEdition, setLimitedEdition] = useState(false);
     const [forkingFee, setForkingFee] = useState(defaultForkingFee);
-    const {page, setPage} = useContext(EditorContext)
+    const {page, setPage} = useContext(EditorContext);
 
     const handleRoyaltyChange = (value) => setRoyaltyValue(value);
     const handleMaxMintableChange = (value) => setMaxMintable(value);
@@ -47,6 +54,58 @@ const Publisher = () => {
         console.log("limitedEdition", value)
         setLimitedEdition(value)
     };
+
+    const handleClickPublish = () => {
+        setIsPublishing(true);
+        const pinataSDK = require('@pinata/sdk');
+        const pinata = pinataSDK(env.PINATA_API_KEY, env.PINATA_API_SECRET);
+
+        const metadata = {
+            name: page.title,
+            image: '',
+            page: page,
+            traits: [
+                {
+                    "display_type": "date",
+                    "trait_type": "Publish Date",
+                    "value": new Date(page.modified).getTime(),
+                }
+            ]
+        };
+
+        if (page._ipfsHashImage) {
+            metadata.image = `ipfs://` + page._ipfsHashImage;
+        }
+
+        const options = {
+            pinataMetadata: {
+                name: page.title,
+                keyvalues: {
+                    type: "TBP Metadata",
+                    version: 1.0,
+                    title: page.title.toString(),
+                    id: page.id.toString(),
+                }
+            },
+            pinataOptions: {
+                cidVersion: 0
+            }
+        };
+
+        pinata.pinJSONToIPFS(metadata, options).then((result) => {
+            console.log(result);
+            page._ipfsHashMetadata = result.IpfsHash;
+            setPage(page);
+            BPageService.update(account, page);
+            console.log(page);
+            setIsPublishing(false);
+            changeTab(1);
+        }).catch((err) => {
+            console.log(err);
+            setIsPublishing(false);
+        });
+    };
+
 
     return (
         <Flex h="100%" flexDirection={"column"} mb={"30"}>
@@ -88,7 +147,8 @@ const Publisher = () => {
                                 </NumberInputStepper>
                             </NumberInput>
                         </Flex>
-                        <FormHelperText>The percentage of the price that you will receive for the sale of this work</FormHelperText>
+                        <FormHelperText>% of the price you will receive for the re-sale of this work
+                            after it has left your account</FormHelperText>
                     </FormControl>
 
                     {/* Allow Forks */}
@@ -155,7 +215,17 @@ const Publisher = () => {
             <Spacer/>
 
             <Box textAlign={"center"} mb={5}>
-                <Button key={"publish-btn"} colorScheme={"cyan"} rightIcon={(<ArrowForwardIcon/>)}>Publish</Button>
+                {isPublishing && <Spinner size={"lg"}/> }
+                {!isPublishing &&
+                    <Button
+                        key={"publish-btn"}
+                        colorScheme={"cyan"}
+                        rightIcon={(<ArrowForwardIcon/>)}
+                        onClick={handleClickPublish}
+                    >
+                        Publish
+                    </Button>
+                }
             </Box>
 
             {/*<Box borderWidth="1px" borderRadius="lg">*/}

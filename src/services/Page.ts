@@ -7,6 +7,9 @@ export default interface BPage {
     modified: Date;
     account?: string;
     address?: string;
+    imageURL: string;
+    _ipfsHashImage: string
+    _ipfsHashMetadata?: string
     floorPrice?: number;
     royaltyPercent?: number;
 }
@@ -16,8 +19,10 @@ export const blankPage = (account) => {
         title: "new page",
         modified: new Date(),
         id: null,
+        imageURL: "",
+        _ipfsHashImage: "",
         content: null,
-        account: account
+        account: account,
     }
     return bp;
 }

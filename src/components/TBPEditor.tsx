@@ -5,6 +5,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import BPageService from '../services/BPageService'
 import {EditorContext} from "../editor-context";
 import {useEthers} from "@usedapp/core";
+import {blankPage} from "../services/Page";
 
 export const TBPEditor = () => {
     let initialState;
@@ -16,13 +17,8 @@ export const TBPEditor = () => {
         initialState = EditorState.createEmpty();
         console.log("empty state");
         console.log(initialState);
-        let pg = {
-            title: "New Page",
-            id: -1,
-            content: JSON.stringify(initialState.getCurrentContent()),
-            modified: new Date()
-        }
-
+        let pg = blankPage(account);
+        pg.content = initialState.getCurrentContent();
         pg.id = BPageService.create(account, pg);
         setPage(pg);
     }
@@ -33,9 +29,8 @@ export const TBPEditor = () => {
         newPage();
     }
 
-    const raw = JSON.parse(page.content);
-    if(raw !== null && Array.isArray(raw.blocks)) {
-        initialState = EditorState.createWithContent(convertFromRaw(raw))
+    if(page.content) {
+        initialState = EditorState.createWithContent(convertFromRaw(page.content));
     }
     else {
         initialState = EditorState.createEmpty();
@@ -55,9 +50,8 @@ export const TBPEditor = () => {
 
     useEffect(() => {
         let initialState;
-        const raw = JSON.parse(page.content);
-        if(raw !== null && Array.isArray(raw.blocks)) {
-            initialState = EditorState.createWithContent(convertFromRaw(raw))
+        if(page.content) {
+            initialState = EditorState.createWithContent(convertFromRaw(page.content));
         } else {
             initialState = EditorState.createEmpty();
         }
@@ -85,14 +79,13 @@ export const TBPEditor = () => {
     }
 
     const saveContent = useDebouncedCallback((content) => {
-            const raw = JSON.stringify(convertToRaw(content));
-            if(raw !== page.content) {
+        const raw = convertToRaw(content);
+            if(content !== page.content) {
                 page.content = raw;
                 if(page.id < 1) {
                     page.id = BPageService.create(account, page);
                 } else {
                     BPageService.update(account, page);
-
                 }
 
                 setPage(page);
