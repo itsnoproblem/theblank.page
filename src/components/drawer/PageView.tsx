@@ -16,7 +16,7 @@ import {
     useBreakpointValue, useClipboard,
     useColorModeValue, useEditableControls,
 } from "@chakra-ui/react";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import BPageService from "../../services/BPageService";
 import {ArrowForwardIcon, CheckCircleIcon, CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
 import {useEthers} from "@usedapp/core";
@@ -58,10 +58,14 @@ export default function PageView({changeTab}: Props) {
     const linkColor = useColorModeValue("blue.600", "cyan.400");
     const isMobile = useBreakpointValue({sm: true, md: false, lg: false});
 
+    if(pageId !== page.id) {
+            setPageId(page.id);
+            setPageTitle(page.title);
+        }
+
     const saveTitle = (title: string) => {
         page.title = title;
         setPage(page);
-        console.log(page);
         BPageService.update(account, page);
     }
 
@@ -78,13 +82,6 @@ export default function PageView({changeTab}: Props) {
         ("0" + date.getSeconds()).slice(-2);
     const modDate = date.toDateString();
 
-    if(pageId !== page.id) {
-        setPageId(page.id);
-        setPageTitle(page.title);
-    }
-
-
-
     return(
         <>
             <Box>
@@ -93,10 +90,13 @@ export default function PageView({changeTab}: Props) {
                         <FormControl id="title" isRequired isDisabled={page.address !== undefined}>
                             <FormLabel>Title</FormLabel>
                             <Editable
-                                defaultValue={pageTitle}
+                                value={pageTitle}
                                 fontSize="2xl"
                                 isPreviewFocusable={false}
                                 onSubmit={saveTitle}
+                                onChange={(nextValue) => {
+                                    setPageTitle(nextValue)
+                                }}
                             >
                                 <HStack>
                                     <EditablePreview />
