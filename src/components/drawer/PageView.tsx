@@ -59,9 +59,9 @@ export default function PageView({changeTab}: Props) {
     const isMobile = useBreakpointValue({sm: true, md: false, lg: false});
 
     if(pageId !== page.id) {
-            setPageId(page.id);
-            setPageTitle(page.title);
-        }
+        setPageId(page.id);
+        setPageTitle(page.title);
+    }
 
     const saveTitle = (title: string) => {
         page.title = title;

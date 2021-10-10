@@ -11,9 +11,16 @@ export const FileUpload = () => {
     const {account} = useEthers();
     const {page, setPage} = useContext(EditorContext)
     const [images, setImages] = useState([]);
+    const [pageId, setPageId] = useState(page.id);
     const { hasCopied, onCopy } = useClipboard(page._ipfsHashMetadata ?? '');
     const [imageIsUploading, setImageIsUploading] = useState(false)
     const ipfsGateway = 'https://gateway.pinata.cloud/ipfs/';
+
+
+    if(pageId !== page.id) {
+        setPageId(page.id);
+        setImages([]);
+    }
 
     const handleRemoveImage = (e) => {
         console.log("remove image", e);
