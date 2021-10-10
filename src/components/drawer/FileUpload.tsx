@@ -6,6 +6,7 @@ import {ImBin2, ImQrcode} from "react-icons/all";
 import {EditorContext} from "../../editor-context";
 import BPageService from "../../services/BPageService";
 import {useEthers} from "@usedapp/core";
+import env from 'react-dotenv';
 
 export const FileUpload = () => {
     const {account} = useEthers();
@@ -49,8 +50,8 @@ export const FileUpload = () => {
                 .post(url, formData, {
                     headers: {
                         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                        pinata_api_key: '23ac5914e19bb4b7b078',
-                        pinata_secret_api_key: 'c03d5cb6881390e5f319445b827af915bf91cf0027d994b614a3b3db9ee4cdd8'
+                        pinata_api_key: env.PINATA_API_KEY,
+                        pinata_secret_api_key: env.PINATA_API_SECRET
                     }
                 })
                 .then(function (response) {

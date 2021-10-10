@@ -10,6 +10,8 @@
 
 # production
 /build
+/public/env.js
+.env
 
 # misc
 .idea

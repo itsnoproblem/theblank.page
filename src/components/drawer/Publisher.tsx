@@ -23,6 +23,7 @@ import {ArrowForwardIcon} from "@chakra-ui/icons";
 import {EditorContext} from "../../editor-context";
 import {useContractCall, useEthers} from "@usedapp/core";
 import BPageService from "../../services/BPageService";
+import env from 'react-dotenv';
 
 type Props = {
     changeTab: any
@@ -57,7 +58,7 @@ const Publisher = ({changeTab}: Props) => {
     const handleClickPublish = () => {
         setIsPublishing(true);
         const pinataSDK = require('@pinata/sdk');
-        const pinata = pinataSDK('23ac5914e19bb4b7b078', 'c03d5cb6881390e5f319445b827af915bf91cf0027d994b614a3b3db9ee4cdd8');
+        const pinata = pinataSDK(env.PINATA_API_KEY, env.PINATA_API_SECRET);
 
         const metadata = {
             name: page.title,
