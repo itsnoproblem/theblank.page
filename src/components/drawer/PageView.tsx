@@ -132,7 +132,7 @@ export default function PageView({changeTab}: Props) {
         <>
             <Box>
                 <Box>
-                    <Box borderTopStartRadius={"none"}  overflow={"hidden"} borderWidth={1} p={4}>
+                    <Box borderTopStartRadius={"none"}  overflow={"hidden"} borderWidth={0} >
                         <FormControl id="title" isRequired isDisabled={page.address !== undefined}>
                             <FormLabel>Title</FormLabel>
                             <Editable

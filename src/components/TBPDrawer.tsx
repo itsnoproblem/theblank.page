@@ -22,7 +22,7 @@ import {
     useColorModeValue,
     useDisclosure,
 } from "@chakra-ui/react";
-import {AddIcon, ArrowBackIcon, EditIcon} from "@chakra-ui/icons";
+import {AddIcon, ArrowBackIcon, ArrowLeftIcon, EditIcon} from "@chakra-ui/icons";
 import {ImFeed, ImStack} from "react-icons/im";
 import Logo from './Logo';
 import PageView from "./drawer/PageView";
@@ -78,7 +78,7 @@ export default function TBPDrawer() {
             >
                 <DrawerOverlay />
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
-                    <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
+                    <DrawerCloseButton mt={4} colorScheme={colorScheme} tabIndex={-1}><ArrowLeftIcon size={"lg"}/></DrawerCloseButton>
                     <DrawerBody pt={5}>
                         {!(account && chainId === ChainId.Rinkeby) &&
                             <Box mt={"50%"} textAlign={"center"} h={"50%"}>

@@ -1,4 +1,4 @@
-import {ContentState, EditorState} from 'draft-js'
+import {ContentState} from 'draft-js'
 
 export default interface BPage {
     id?: any;

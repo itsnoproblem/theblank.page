@@ -1,12 +1,11 @@
 import './TBPEditor.css';
-import React, {useCallback, useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {convertFromRaw, convertToRaw, Editor, EditorState, RichUtils} from 'draft-js';
 import {useDebouncedCallback} from 'use-debounce';
 import BPageService from '../services/BPageService'
 import {EditorContext} from "../editor-context";
-import {ChainId, useEthers, useNotifications} from "@usedapp/core";
+import {ChainId, useEthers} from "@usedapp/core";
 import {blankPage} from "../services/Page";
-import {useEventListener} from "@chakra-ui/react";
 
 type Props = {
     setEditorState: (initialState: any) => void

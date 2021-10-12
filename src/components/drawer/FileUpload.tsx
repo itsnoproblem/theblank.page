@@ -19,6 +19,7 @@ type Props = {
     onUpload: (hash: string) => void;
     onRemove: () => void;
 }
+
 export const FileUpload = ({onUpload, onRemove}: Props) => {
     const {page, setPage} = useContext(EditorContext)
     const [images, setImages] = useState([]);
