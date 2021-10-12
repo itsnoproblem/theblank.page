@@ -1,21 +1,33 @@
 import React, {useContext, useState} from 'react';
 import ImageUploading from 'react-images-uploading';
-import {Box, HStack, IconButton, Image, Spinner, VStack, useClipboard, Tooltip} from "@chakra-ui/react";
-import {CloseIcon} from "@chakra-ui/icons";
+import {
+    Box,
+    HStack,
+    IconButton,
+    Image,
+    Spinner,
+    VStack,
+    useClipboard,
+    Tooltip,
+    useColorModeValue
+} from "@chakra-ui/react";
 import {ImBin2, ImQrcode} from "react-icons/all";
 import {EditorContext} from "../../editor-context";
-import BPageService from "../../services/BPageService";
-import {useEthers} from "@usedapp/core";
 import env from 'react-dotenv';
 
-export const FileUpload = () => {
-    const {account} = useEthers();
+type Props = {
+    onUpload: (hash: string) => void;
+    onRemove: () => void;
+}
+
+export const FileUpload = ({onUpload, onRemove}: Props) => {
     const {page, setPage} = useContext(EditorContext)
     const [images, setImages] = useState([]);
     const [pageId, setPageId] = useState(page.id);
     const { hasCopied, onCopy } = useClipboard(page._ipfsHashMetadata ?? '');
     const [imageIsUploading, setImageIsUploading] = useState(false)
-    const ipfsGateway = 'https://gateway.pinata.cloud/ipfs/';
+    const ipfsGateway = env.IPFS_GATEWAY;
+    const pinataApiUrl = env.PINATA_API_URL;
 
 
     if(pageId !== page.id) {
@@ -25,9 +37,8 @@ export const FileUpload = () => {
 
     const handleRemoveImage = (e) => {
         console.log("remove image", e);
-        page._ipfsHashImage = '';
         setImages([]);
-        setPage(page);
+        onRemove();
     }
 
     const handleImageUpload = (imageList, addUpdateIndex) => {
@@ -37,7 +48,7 @@ export const FileUpload = () => {
             const axios = require('axios');
             const FormData = require('form-data');
             const image = imageList[0];
-            const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+            const url = pinataApiUrl + 'pinning/pinFileToIPFS';
             const formData = new FormData();
 
             setImages(imageList);
@@ -55,18 +66,19 @@ export const FileUpload = () => {
                     }
                 })
                 .then(function (response) {
-                    page._ipfsHashImage = response.data.IpfsHash;
-                    console.log("ipfsHashImage", page._ipfsHashImage);
-                    setPage(page);
-                    BPageService.update(account, page);
+                    onUpload(response.data.IpfsHash);
                     setImageIsUploading(false);
                 })
                 .catch(function (error) {
                     console.log(error);
                     setImageIsUploading(false);
                 });
+            onUpload(page._ipfsHashImage);
         }
     };
+
+    const color = useColorModeValue("blue.400",  "");
+    const colorDragging = useColorModeValue("blue.700", "");
 
     return(
         <ImageUploading
@@ -85,9 +97,9 @@ export const FileUpload = () => {
                 <Box className="upload__image-wrapper">
                     {!page._ipfsHashImage && !imageIsUploading &&
                     <Box border={"1px dashed"}
-                         borderColor={"gray.100"}
+                         borderColor={color}
                          p={8}
-                         color={isDragging ? 'blue.100' : 'gray.100'}
+                         color={isDragging ? colorDragging : color}
                          onClick={onImageUpload}
                          cursor={"pointer"}
                          {...dragProps}
@@ -101,7 +113,7 @@ export const FileUpload = () => {
                     {page._ipfsHashImage &&
                         <Box className={"upload__image-preview"}>
                             <HStack key={0} className="image-item" alignItems={"flex-start"}>
-                                <Box padding={2} borderRadius={"lg"} borderColor={"cyan.50"} border={"1px"}>
+                                <Box padding={2} borderRadius={"lg"} borderColor={color} border={"1px"}>
                                     <Image src={ipfsGateway + page._ipfsHashImage} alt="" />
                                 </Box>
                                 <VStack>

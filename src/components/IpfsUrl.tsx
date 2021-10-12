@@ -1,12 +1,13 @@
-import {HStack, IconButton, Kbd, Link, useClipboard} from "@chakra-ui/react";
+import {HStack, IconButton, Kbd, Link, Tooltip, useClipboard} from "@chakra-ui/react";
 import {ImCopy} from "react-icons/all";
+import env from 'react-dotenv';
 
 type Props = {
     hash: string
 }
 
 export const IpfsLink = ({ hash }: Props) => {
-    const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs/';
+    const IPFS_GATEWAY = env.IPFS_GATEWAY;
     const {onCopy, hasCopied} = useClipboard(hash ?? '')
     return (
         <>
@@ -22,9 +23,14 @@ export const IpfsLink = ({ hash }: Props) => {
                           }}
                     >ipfs://{hash}</Link>
                 </Kbd>
-                <IconButton aria-label={"Copy CID"} size="xs" icon={<ImCopy/>}/>
+                <Tooltip label={hasCopied ? "Copied!" : "Copy CID"} placement={"top-start"} closeDelay={250}>
+                    <IconButton aria-label={"Copy CID"} size="xs" onClick={onCopy} icon={<ImCopy/>}/>
+                </Tooltip>
             </HStack>
         }
+            {!hash &&
+                <Kbd>---</Kbd>
+            }
         </>
     )
 }

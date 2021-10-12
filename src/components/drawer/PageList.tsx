@@ -91,6 +91,7 @@ export default function PageList({changeTab}: Props) {
     const activeRowHover = {
         backgroundColor: useColorModeValue("gray.300", "gray.600"),
         color: useColorModeValue("gray.500", "gray.200"),
+        cursor: "pointer"
     }
 
     const inactiveRowBackgroundColor = useColorModeValue("gray.50", "gray.700");
