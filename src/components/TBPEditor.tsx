@@ -1,42 +1,30 @@
 import './TBPEditor.css';
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useCallback, useContext, useEffect, useRef} from 'react';
 import {convertFromRaw, convertToRaw, Editor, EditorState, RichUtils} from 'draft-js';
 import {useDebouncedCallback} from 'use-debounce';
 import BPageService from '../services/BPageService'
 import {EditorContext} from "../editor-context";
-import {useEthers} from "@usedapp/core";
+import {ChainId, useEthers, useNotifications} from "@usedapp/core";
 import {blankPage} from "../services/Page";
+import {useEventListener} from "@chakra-ui/react";
 
-export const TBPEditor = () => {
+type Props = {
+    setEditorState: (initialState: any) => void
+    editorState: any
+}
+export const TBPEditor = ({editorState, setEditorState}: Props) => {
     let initialState;
     const editor = useRef(null);
     const {page, setPage} = useContext(EditorContext);
-    const { account } = useEthers()
+    const { account, chainId } = useEthers();
 
     const newPage = () => {
         initialState = EditorState.createEmpty();
-        console.log("empty state");
-        console.log(initialState);
         let pg = blankPage(account);
         pg.content = initialState.getCurrentContent();
         pg.id = BPageService.create(account, pg);
         setPage(pg);
     }
-
-    if(page.id < 1) {
-        console.log("Creating newPage");
-        console.log(page);
-        newPage();
-    }
-
-    if(page.content) {
-        initialState = EditorState.createWithContent(convertFromRaw(page.content));
-    }
-    else {
-        initialState = EditorState.createEmpty();
-    }
-
-    const [editorState, setEditorState] = React.useState(initialState);
 
     const handleKeyCommand = (command, state) => {
         const newState = RichUtils.handleKeyCommand(state, command);
@@ -49,15 +37,14 @@ export const TBPEditor = () => {
     }
 
     useEffect(() => {
-        let initialState;
         if(page.content) {
             initialState = EditorState.createWithContent(convertFromRaw(page.content));
-        } else {
+        }
+        else {
             initialState = EditorState.createEmpty();
         }
 
         setEditorState(initialState);
-        setTimeout(() => { focusEditor() }, 1000);
     }, [page])
 
     const focusEditor = () => {
@@ -66,7 +53,6 @@ export const TBPEditor = () => {
             editor.current.focus();
         }
         else {
-            console.log("no editor yet");
             console.log(editor.current);
         }
     };
@@ -106,6 +92,7 @@ export const TBPEditor = () => {
                     ref={editor}
                     placeholder={"Write something..."}
                     d={"inline-block"}
+                    readOnly={(account && chainId === ChainId.Rinkeby) ? false : true}
             />
         </div>
     );

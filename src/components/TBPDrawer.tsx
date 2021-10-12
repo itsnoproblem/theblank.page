@@ -80,7 +80,7 @@ export default function TBPDrawer() {
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
                     <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
                     <DrawerBody pt={5}>
-                        {!account || chainId !== ChainId.Rinkeby &&
+                        {!(account && chainId === ChainId.Rinkeby) &&
                             <Box mt={"50%"} textAlign={"center"} h={"50%"}>
                                 <Text fontSize={"lg"}>
                                     Please connect an account to the <b>rinkeby network</b> to continue

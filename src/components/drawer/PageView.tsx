@@ -14,7 +14,7 @@ import {
     StatNumber,
     Text,
     useBreakpointValue, useClipboard,
-    useColorModeValue, useEditableControls,
+    useColorModeValue, useEditable, useEditableControls,
 } from "@chakra-ui/react";
 import React, {useContext, useEffect, useState} from "react";
 import BPageService from "../../services/BPageService";
@@ -54,6 +54,7 @@ export default function PageView({changeTab}: Props) {
     const {account} = useEthers();
     const [pageTitle, setPageTitle] = useState(page.title);
     const [pageId, setPageId] = useState(page.id);
+    const [imageHash, setImageHash] = useState(page._ipfsHashImage);
 
     const linkColor = useColorModeValue("blue.600", "cyan.400");
     const isMobile = useBreakpointValue({sm: true, md: false, lg: false});
@@ -81,6 +82,51 @@ export default function PageView({changeTab}: Props) {
         ("0" + date.getMinutes()).slice(-2) + ":" +
         ("0" + date.getSeconds()).slice(-2);
     const modDate = date.toDateString();
+
+    type PreviewProps = {
+        isMobile: boolean;
+        address?: string;
+    }
+    const ContractPreview = ({isMobile, address}: PreviewProps) => {
+        return (
+            <>
+                <GridItem>Contract:</GridItem>
+                <GridItem><Kbd d="inline" isTruncated={isMobile}>{!address ? "---" : address}</Kbd></GridItem>
+            </>
+        )
+    }
+
+    type IpfsProps = {
+        name: string;
+        hash?: string;
+    }
+    const IpfsPreview = ({name, hash}: IpfsProps) => {
+        return (
+        <>
+            <GridItem mt={4}>
+                {name}:
+            </GridItem>
+            <GridItem mt={4}>
+                <IpfsLink hash={hash ?? ''}/>
+            </GridItem>
+        </>
+        );
+    }
+
+    const handleUploadComplete = (hash: string) => {
+        console.log("ipfs hash", hash);
+        page._ipfsHashImage = hash;
+        setPage(page);
+        BPageService.update(account, page);
+        setImageHash(hash);
+    }
+
+    const handleImageRemove = () => {
+        setImageHash('');
+        page._ipfsHashImage = '';
+        setPage(page);
+        BPageService.update(account, page);
+    }
 
     return(
         <>
@@ -116,19 +162,11 @@ export default function PageView({changeTab}: Props) {
                                 <Divider/>
                             </GridItem>
 
-                            <GridItem mt={4}>
-                                Metadata:
-                            </GridItem>
-                            <GridItem mt={4}>
-                                {!page._ipfsHashMetadata && '---'}
-                                {page._ipfsHashMetadata && (<IpfsLink hash={page._ipfsHashMetadata ?? ''}/>)}
-                            </GridItem>
+                            <IpfsPreview name={"Metadata"} hash={page._ipfsHashMetadata}/>
 
-                            <GridItem>Image:</GridItem>
-                            <GridItem><IpfsLink hash={page._ipfsHashImage ?? ''}/></GridItem>
+                            <IpfsPreview name={"Image"} hash={page._ipfsHashImage}/>
 
-                            <GridItem>Contract:</GridItem>
-                            <GridItem><Kbd d="inline" isTruncated={isMobile}>{page.address === undefined ? "---" : page.address}</Kbd></GridItem>
+                            <ContractPreview isMobile={isMobile ?? false} address={page.address}/>
 
                             <GridItem colSpan={2} mt={4}>
                                 <Divider/>
@@ -137,7 +175,7 @@ export default function PageView({changeTab}: Props) {
 
                         <FormControl>
                             <FormLabel>Image</FormLabel>
-                            <FileUpload/>
+                            <FileUpload onUpload={handleUploadComplete} onRemove={handleImageRemove}/>
                         </FormControl>
 
                         <Box pt={4} visibility={(page.address !== undefined) ? "hidden" : "visible"}>
