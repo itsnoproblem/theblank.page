@@ -107,6 +107,8 @@ const Publisher = ({changeTab}: Props) => {
 
             mint(account).then((result)=>{
                 console.log("minted", result);
+            }).catch((reason) => {
+                console.log("mint failed", reason);
             });
 
 

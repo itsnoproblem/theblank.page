@@ -66,7 +66,10 @@
     ]
   },
   "react-dotenv": {
-    "whitelist": ["PINATA_API_KEY", "PINATA_API_SECRET"]
+    "whitelist": [
+      "PINATA_API_KEY",
+      "PINATA_API_SECRET"
+    ]
   },
   "devDependencies": {
     "@types/chance": "^1.1.3",
