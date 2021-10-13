@@ -17,13 +17,17 @@ import {
     Spacer, Spinner,
     Switch, Text
 } from "@chakra-ui/react";
+import { Interface } from '@ethersproject/abi';
 import React, {useContext, useRef, useState} from "react";
 import '@fontsource/roboto-mono';
 import {ArrowForwardIcon} from "@chakra-ui/icons";
 import {EditorContext} from "../../editor-context";
-import {useContractCall, useEthers} from "@usedapp/core";
+import {ERC20Interface, useContractCall, useContractFunction, useEthers} from "@usedapp/core";
 import BPageService from "../../services/BPageService";
 import env from 'react-dotenv';
+import {NFT_ABI} from "../../abi/TBP";
+import {Contract} from "@ethersproject/contracts";
+import {useMinter} from "../../hooks/useMinter";
 
 type Props = {
     changeTab: any
@@ -40,6 +44,8 @@ const Publisher = ({changeTab}: Props) => {
     const [limitedEdition, setLimitedEdition] = useState(false);
     const [forkingFee, setForkingFee] = useState(defaultForkingFee);
     const {page, setPage} = useContext(EditorContext);
+    const {state: mintState, send: mint} = useMinter();
+
 
     const handleRoyaltyChange = (value) => setRoyaltyValue(value);
     const handleMaxMintableChange = (value) => setMaxMintable(value);
@@ -97,7 +103,13 @@ const Publisher = ({changeTab}: Props) => {
             page._ipfsHashMetadata = result.IpfsHash;
             setPage(page);
             BPageService.update(account, page);
-            console.log(page);
+
+
+            mint(account).then((result)=>{
+                console.log("minted", result);
+            });
+
+
             setIsPublishing(false);
             changeTab(1);
         }).catch((err) => {
