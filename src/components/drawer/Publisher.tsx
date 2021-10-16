@@ -39,7 +39,7 @@ const Publisher = ({changeTab}: Props) => {
 
     const defaultRoyalty = 1.5;
     const defaultForkingFee = 1.0;
-    const solidityContract = require('../../build/contracts/TheBlankPage.json');
+    const solidityContract = require('../../build/TheBlankPage.json');
 
     const {library, account} = useEthers();
     const [isPublishing, setIsPublishing] = useState(false);
