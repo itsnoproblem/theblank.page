@@ -28,7 +28,6 @@ import BPageService from "../../services/BPageService";
 import env from 'react-dotenv';
 import {useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {BigNumber, ethers} from "ethers";
 
 type Props = {
     changeTab: any

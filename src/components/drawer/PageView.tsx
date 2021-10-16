@@ -1,7 +1,7 @@
 import {
     Badge,
     Box,
-    ButtonGroup, color,
+    ButtonGroup,
     Divider,
     Editable,
     EditableInput,
@@ -13,7 +13,8 @@ import {
     GridItem,
     HStack,
     IconButton,
-    Kbd, Link,
+    Kbd,
+    Link,
     Stat,
     StatHelpText,
     StatLabel,
