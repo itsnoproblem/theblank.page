@@ -17,7 +17,7 @@ import React, {
 } from "@chakra-ui/react"
 import BPageService from "../../services/BPageService";
 import BPage from "../../services/Page";
-import {DeleteIcon} from "@chakra-ui/icons";
+import {CheckCircleIcon, DeleteIcon} from "@chakra-ui/icons";
 import {useContext, useRef, useState} from "react";
 import {useEthers} from "@usedapp/core";
 import {EditorContext} from "../../editor-context";
@@ -174,7 +174,10 @@ export default function PageList({changeTab}: Props) {
 
                             <GridItem colSpan={4} flex={1}>
                                 <ResponsiveDate d={value.modified}/>
-                                <Text fontSize={"xl"} isTruncated>{value.title}</Text>
+                                <HStack>
+                                    <CheckCircleIcon color={value._tokenId ? "green.300" : "yellow.200"}/>
+                                    <Text fontSize={"xl"} isTruncated>{value.title}</Text>
+                                </HStack>
                             </GridItem>
 
                             <GridItem textAlign={"right"}>

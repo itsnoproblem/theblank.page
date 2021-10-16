@@ -34,6 +34,10 @@ type Props = {
     changeTab: any
 }
 const Publisher = ({changeTab}: Props) => {
+    const STATE_DEFAULT = 0;
+    const STATE_PUBLISHING = 1;
+    const STATE_WAITING = 2;
+
     const defaultRoyalty = 1.5;
     const defaultForkingFee = 1.0;
     const solidityContract = require('../../build/contracts/TheBlankPage.json');
@@ -45,6 +49,7 @@ const Publisher = ({changeTab}: Props) => {
     const [allowForks, setAllowForks] = useState(false);
     const [limitedEdition, setLimitedEdition] = useState(false);
     const [forkingFee, setForkingFee] = useState(defaultForkingFee);
+    const [publishingState, setPublishingState] = useState(STATE_DEFAULT);
     const {page, setPage} = useContext(EditorContext);
     const nftAddress = '0xBb742e6a6460998d0dC29b33184E274Ef661583c'; // rinkeby
     const nftContract = new Contract(nftAddress, JSON.stringify(solidityContract.abi), library?.getSigner());
@@ -112,6 +117,7 @@ const Publisher = ({changeTab}: Props) => {
                 metadata: `ipfs://${page._ipfsHashMetadata}`
             };
             console.log("about to mint", args);
+            setPublishingState(STATE_PUBLISHING);
 
             //
             // MINT
@@ -120,6 +126,7 @@ const Publisher = ({changeTab}: Props) => {
 
                 nftContract.newPage(account, page._ipfsHashMetadata, page._ipfsHashMetadata).then(async (response) => {
                     console.log("minted", response);
+                    setPublishingState(STATE_WAITING);
 
                     nftContract.on('TokenID', (value, event) => {
                         console.log("caught event", value, event);
@@ -129,28 +136,43 @@ const Publisher = ({changeTab}: Props) => {
                         setPage(page);
                         BPageService.update(account, page);
 
+                        setPublishingState(STATE_DEFAULT);
                         setIsPublishing(false);
                         changeTab(1);
                     });
 
                     await response.wait();
+                    setPublishingState(STATE_DEFAULT);
 
                 }).catch((reason) => {
                     console.log("mint failed", reason);
+                    setPublishingState(STATE_DEFAULT);
                     setIsPublishing(false);
                 });
             }
             else {
                 console.log("LIBRARY WAS UNDEFINED");
+                setPublishingState(STATE_DEFAULT);
                 setIsPublishing(false);
             }
 
         }).catch((err) => {
             console.log(err);
+            setPublishingState(STATE_DEFAULT);
             setIsPublishing(false);
         });
     };
 
+    const publishStatus = (state: number) => {
+        switch (state) {
+            case STATE_PUBLISHING:
+                return "publishing to network...";
+            case STATE_WAITING:
+                return "waiting for confirmations...";
+            default:
+                return "";
+        }
+    }
 
     return (
         <Flex h="100%" flexDirection={"column"} mb={"30"}>
@@ -268,7 +290,12 @@ const Publisher = ({changeTab}: Props) => {
             <Spacer/>
 
             <Box textAlign={"center"} mb={5}>
-                {isPublishing && <Spinner size={"lg"}/> }
+                {isPublishing &&
+                    <Box>
+                        <Spinner size={"lg"}/>
+                        <Text>{publishStatus(publishingState)}</Text>
+                    </Box>
+                }
                 {!isPublishing &&
                     <Button
                         key={"publish-btn"}

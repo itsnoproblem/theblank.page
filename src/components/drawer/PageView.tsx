@@ -1,7 +1,7 @@
 import {
     Badge,
     Box,
-    ButtonGroup,
+    ButtonGroup, color,
     Divider,
     Editable,
     EditableInput,
@@ -13,7 +13,7 @@ import {
     GridItem,
     HStack,
     IconButton,
-    Kbd,
+    Kbd, Link,
     Stat,
     StatHelpText,
     StatLabel,
@@ -123,7 +123,7 @@ export default function PageView({changeTab}: Props) {
 
                     <Grid maxW={"5"} templateColumns={"repeat(2, 1fr)"} gap={4} mt={2} mb={8}>
                         <GridItem colSpan={2}>
-                            <CheckCircleIcon color={(!page._contract) ? "yellow.300" : "green.400"}/>&nbsp;&nbsp;
+                            <CheckCircleIcon color={(!page._contract) ? "yellow.200" : "green.400"}/>&nbsp;&nbsp;
                             {(page._tokenId === undefined) ? "un" : ""}published
                         </GridItem>
 
@@ -146,9 +146,16 @@ export default function PageView({changeTab}: Props) {
                         <GridItem>
                             <Kbd d="inline" isTruncated={isMobile}>
                                 {page._tokenId === undefined ? "---" : (
-                                    <a href={`https://testnets-api.opensea.io/asset/${page._contract}/${page._tokenId}`} target="_blank">
+                                    <Link href={`https://testnets-api.opensea.io/asset/${page._contract}/${page._tokenId}`}
+                                       target="_blank"
+                                          color={"green.300"}
+                                          textDecoration={"none"}
+                                          _hover={{
+                                              color: "yellow.200",
+                                          }}
+                                    >
                                         {page._contract} [{page._tokenId}]
-                                    </a>
+                                    </Link>
                                 )}
                             </Kbd>
                         </GridItem>
