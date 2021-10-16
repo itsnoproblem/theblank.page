@@ -1,6 +1,7 @@
 import {
     Box,
-    Button, Checkbox, Divider,
+    Button,
+    Divider,
     Flex,
     FormControl,
     FormHelperText,
@@ -14,20 +15,20 @@ import {
     NumberInputField,
     NumberInputStepper,
     SimpleGrid,
-    Spacer, Spinner,
-    Switch, Text
+    Spacer,
+    Spinner,
+    Switch,
+    Text
 } from "@chakra-ui/react";
-import { Interface } from '@ethersproject/abi';
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useState} from "react";
 import '@fontsource/roboto-mono';
 import {ArrowForwardIcon} from "@chakra-ui/icons";
 import {EditorContext} from "../../editor-context";
-import {ERC20Interface, useContractCall, useContractFunction, useEthers} from "@usedapp/core";
 import BPageService from "../../services/BPageService";
 import env from 'react-dotenv';
-import {NFT_ABI} from "../../abi/TBP";
+import {useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {useMinter} from "../../hooks/useMinter";
+import {BigNumber, ethers} from "ethers";
 
 type Props = {
     changeTab: any
@@ -35,8 +36,9 @@ type Props = {
 const Publisher = ({changeTab}: Props) => {
     const defaultRoyalty = 1.5;
     const defaultForkingFee = 1.0;
+    const solidityContract = require('../../build/contracts/TheBlankPage.json');
 
-    const {account} = useEthers();
+    const {library, account} = useEthers();
     const [isPublishing, setIsPublishing] = useState(false);
     const [royaltyValue, setRoyaltyValue] = useState(defaultRoyalty);
     const [maxMintable, setMaxMintable] = useState(100);
@@ -44,8 +46,8 @@ const Publisher = ({changeTab}: Props) => {
     const [limitedEdition, setLimitedEdition] = useState(false);
     const [forkingFee, setForkingFee] = useState(defaultForkingFee);
     const {page, setPage} = useContext(EditorContext);
-    const {state: mintState, send: mint} = useMinter();
-
+    const nftAddress = '0xBb742e6a6460998d0dC29b33184E274Ef661583c'; // rinkeby
+    const nftContract = new Contract(nftAddress, JSON.stringify(solidityContract.abi), library?.getSigner());
 
     const handleRoyaltyChange = (value) => setRoyaltyValue(value);
     const handleMaxMintableChange = (value) => setMaxMintable(value);
@@ -98,22 +100,50 @@ const Publisher = ({changeTab}: Props) => {
             }
         };
 
-        pinata.pinJSONToIPFS(metadata, options).then((result) => {
+        pinata.pinJSONToIPFS(metadata, options).then((result: { IpfsHash: string | undefined; }) => {
             console.log(result);
             page._ipfsHashMetadata = result.IpfsHash;
             setPage(page);
             BPageService.update(account, page);
 
+            const args = {
+                recipient: account,
+                hash: page._ipfsHashMetadata,
+                metadata: `ipfs://${page._ipfsHashMetadata}`
+            };
+            console.log("about to mint", args);
 
-            mint(account).then((result)=>{
-                console.log("minted", result);
-            }).catch((reason) => {
-                console.log("mint failed", reason);
-            });
+            //
+            // MINT
+            //
+            if(library !== undefined) {
 
+                nftContract.newPage(account, page._ipfsHashMetadata, page._ipfsHashMetadata).then(async (response) => {
+                    await response.wait();
+                    console.log("minted", response);
 
-            setIsPublishing(false);
-            changeTab(1);
+                    nftContract.on('TokenID', (value, event) => {
+                        console.log("caught event", value, event);
+                        page._tokenId = value.toNumber();
+                        page._transactionHash = response.hash;
+                        page._contract = nftAddress;
+                        setPage(page);
+                        BPageService.update(account, page);
+
+                        setIsPublishing(false);
+                        changeTab(1);
+                    });
+
+                }).catch((reason) => {
+                    console.log("mint failed", reason);
+                    setIsPublishing(false);
+                });
+            }
+            else {
+                console.log("LIBRARY WAS UNDEFINED");
+                setIsPublishing(false);
+            }
+
         }).catch((err) => {
             console.log(err);
             setIsPublishing(false);

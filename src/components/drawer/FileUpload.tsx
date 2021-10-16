@@ -1,16 +1,17 @@
 import React, {useContext, useState} from 'react';
 import ImageUploading from 'react-images-uploading';
-import {Box, HStack, IconButton, Image, Spinner, VStack, useClipboard, Tooltip} from "@chakra-ui/react";
-import {CloseIcon} from "@chakra-ui/icons";
+import {Box, HStack, IconButton, Image, Spinner, Tooltip, useClipboard, VStack} from "@chakra-ui/react";
 import {ImBin2, ImQrcode} from "react-icons/all";
 import {EditorContext} from "../../editor-context";
-import BPageService from "../../services/BPageService";
-import {useEthers} from "@usedapp/core";
 import env from 'react-dotenv';
 
-export const FileUpload = () => {
-    const {account} = useEthers();
-    const {page, setPage} = useContext(EditorContext)
+type Props = {
+    onUploadComplete: (ipfsHash: string) => void;
+    onFileRemove: () => void;
+}
+
+export const FileUpload = ({onUploadComplete, onFileRemove}: Props) => {
+    const {page} = useContext(EditorContext)
     const [images, setImages] = useState([]);
     const [pageId, setPageId] = useState(page.id);
     const { hasCopied, onCopy } = useClipboard(page._ipfsHashMetadata ?? '');
@@ -25,9 +26,7 @@ export const FileUpload = () => {
 
     const handleRemoveImage = (e) => {
         console.log("remove image", e);
-        page._ipfsHashImage = '';
-        setImages([]);
-        setPage(page);
+        onFileRemove();
     }
 
     const handleImageUpload = (imageList, addUpdateIndex) => {
@@ -43,7 +42,6 @@ export const FileUpload = () => {
             setImages(imageList);
 
             // const fileContents = await image['data_url'];
-
             formData.append('file', image['file'], image['file'].name);
 
             axios
@@ -55,10 +53,7 @@ export const FileUpload = () => {
                     }
                 })
                 .then(function (response) {
-                    page._ipfsHashImage = response.data.IpfsHash;
-                    console.log("ipfsHashImage", page._ipfsHashImage);
-                    setPage(page);
-                    BPageService.update(account, page);
+                    onUploadComplete(response.data.IpfsHash);
                     setImageIsUploading(false);
                 })
                 .catch(function (error) {
@@ -116,10 +111,7 @@ export const FileUpload = () => {
                                         />
                                     </Tooltip>)
                                     <IconButton icon={<ImBin2/>}
-                                        onClick={(e) => {
-                                            handleRemoveImage(e)
-                                            onImageRemove(0)
-                                        }}
+                                        onClick={handleRemoveImage}
                                         aria-label={'Remove'}
                                     />
                                 </VStack>

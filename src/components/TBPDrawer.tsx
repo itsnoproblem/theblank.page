@@ -29,7 +29,6 @@ import PageView from "./drawer/PageView";
 import PageList from "./drawer/PageList";
 import {EditorContext} from "../editor-context";
 import BPageService from "../services/BPageService";
-import {EditorState} from 'draft-js';
 import Publisher from "./drawer/Publisher";
 import {ChainId, useEthers} from "@usedapp/core";
 import {blankPage} from "../services/Page";
@@ -38,7 +37,6 @@ import {blankPage} from "../services/Page";
 export default function TBPDrawer() {
     const TAB_PAGELIST = 0;
     const TAB_EDITPAGE = 1;
-    const TAB_PUBLISHER = 2;
     const TAB_NEWPAGE = 3;
 
     const backgroundColor = useColorModeValue("gray.50", "gray.700");
@@ -48,7 +46,7 @@ export default function TBPDrawer() {
 
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [tabIndex, setTabIndex] = React.useState(TAB_PAGELIST);
-    const {page, setPage} = useContext(EditorContext);
+    const {setPage} = useContext(EditorContext);
     const {chainId, account } = useEthers();
 
     const changeTab = (idx) => {
@@ -80,14 +78,14 @@ export default function TBPDrawer() {
                 <DrawerContent mr={4} backgroundColor={backgroundColor} overflow={"hidden"}>
                     <DrawerCloseButton icon={(<ArrowBackIcon/>)} mt={4} colorScheme={colorScheme} tabIndex={-1}/>
                     <DrawerBody pt={5}>
-                        {!account || chainId !== ChainId.Rinkeby &&
+                        {(!account || chainId !== ChainId.Rinkeby) &&
                             <Box mt={"50%"} textAlign={"center"} h={"50%"}>
                                 <Text fontSize={"lg"}>
                                     Please connect an account to the <b>rinkeby network</b> to continue
                                 </Text>
                             </Box>
                         }
-                        {account && chainId === ChainId.Rinkeby &&
+                        {(account && chainId === ChainId.Rinkeby) &&
                             <Tabs pb={"56px"} variant={"solid-rounded"} index={tabIndex} onChange={changeTab}>
                                 <TabList borderBottom={"1px solid"} pb={4}>
                                     <Tab>

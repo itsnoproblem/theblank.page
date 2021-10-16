@@ -1,4 +1,4 @@
-import {HStack, IconButton, Kbd, Link, useClipboard} from "@chakra-ui/react";
+import {HStack, IconButton, Kbd, Link} from "@chakra-ui/react";
 import {ImCopy} from "react-icons/all";
 
 type Props = {
@@ -7,7 +7,6 @@ type Props = {
 
 export const IpfsLink = ({ hash }: Props) => {
     const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs/';
-    const {onCopy, hasCopied} = useClipboard(hash ?? '')
     return (
         <>
         {hash &&
@@ -24,6 +23,9 @@ export const IpfsLink = ({ hash }: Props) => {
                 </Kbd>
                 <IconButton aria-label={"Copy CID"} size="xs" icon={<ImCopy/>}/>
             </HStack>
+        }
+        {!hash &&
+            <Kbd>---</Kbd>
         }
         </>
     )

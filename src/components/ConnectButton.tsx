@@ -1,4 +1,3 @@
-// ConnectButton.js
 import {Box, Button, Text, useColorModeValue} from "@chakra-ui/react";
 import {useEtherBalance, useEthers} from "@usedapp/core";
 import {formatEther} from "@ethersproject/units";
@@ -12,11 +11,11 @@ type Props = {
     handleOpenModal: any;
 }
 
-export default function ConnectButton({ handleOpenModal }: Props) {
-    const {activateBrowserWallet, deactivate, account } = useEthers();
+export default function ConnectButton({handleOpenModal}: Props) {
+    const {activateBrowserWallet, account} = useEthers();
 
     const etherBalance = useEtherBalance(account);
-    const {page, setPage} = useContext(EditorContext)
+    const {setPage} = useContext(EditorContext)
 
     function handleConnectWallet() {
         activateBrowserWallet();
@@ -45,17 +44,17 @@ export default function ConnectButton({ handleOpenModal }: Props) {
 
     return account ? (
         <Box
-          display="flex"
-          alignItems="center"
-          background={outerBg}
-          color={outerColor}
-          borderRadius="xl"
-          py="0"
+            display="flex"
+            alignItems="center"
+            background={outerBg}
+            color={outerColor}
+            borderRadius="xl"
+            py="0"
         >
             <Box px="3">
-              <Text color={outerColor} fontSize="md">
-                {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} ETH
-              </Text>
+                <Text color={outerColor} fontSize="md">
+                    {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} ETH
+                </Text>
             </Box>
 
             <Button

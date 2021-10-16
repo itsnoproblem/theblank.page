@@ -1,29 +1,34 @@
 import {
     Badge,
     Box,
-    Button, ButtonGroup, CloseButton, Divider, Editable, EditableInput, EditablePreview, Flex,
+    ButtonGroup,
+    Divider,
+    Editable,
+    EditableInput,
+    EditablePreview,
+    Flex,
     FormControl,
     FormLabel,
     Grid,
-    GridItem, HStack, IconButton,
-    Input,
+    GridItem,
+    HStack,
+    IconButton,
     Kbd,
     Stat,
     StatHelpText,
     StatLabel,
     StatNumber,
     Text,
-    useBreakpointValue, useClipboard,
-    useColorModeValue, useEditableControls,
+    useBreakpointValue,
+    useEditableControls,
 } from "@chakra-ui/react";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import BPageService from "../../services/BPageService";
-import {ArrowForwardIcon, CheckCircleIcon, CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
+import {CheckCircleIcon, CheckIcon, CloseIcon, EditIcon} from "@chakra-ui/icons";
 import {useEthers} from "@usedapp/core";
 import {EditorContext} from "../../editor-context";
 import {FileUpload} from "./FileUpload";
 import {IpfsLink} from "../IpfsUrl";
-import {ImCopy, ImQrcode} from "react-icons/all";
 
 function EditableControls() {
     const {
@@ -54,8 +59,8 @@ export default function PageView({changeTab}: Props) {
     const {account} = useEthers();
     const [pageTitle, setPageTitle] = useState(page.title);
     const [pageId, setPageId] = useState(page.id);
+    const [imageHash, setImageHash] = useState(page._ipfsHashImage)
 
-    const linkColor = useColorModeValue("blue.600", "cyan.400");
     const isMobile = useBreakpointValue({sm: true, md: false, lg: false});
 
     if(pageId !== page.id) {
@@ -81,6 +86,21 @@ export default function PageView({changeTab}: Props) {
         ("0" + date.getMinutes()).slice(-2) + ":" +
         ("0" + date.getSeconds()).slice(-2);
     const modDate = date.toDateString();
+
+    const onImageAttach = (hash: string) => {
+        console.log("onImageAttach", hash);
+        setImageHash(hash);
+        page._ipfsHashImage = hash;
+        setPage(page);
+        BPageService.update(account, page);
+    }
+
+    const onImageRemove = () => {
+        setImageHash("");
+        page._ipfsHashImage = "";
+        setPage(page);
+        BPageService.update(account, page);
+    }
 
     return(
         <>
@@ -109,7 +129,7 @@ export default function PageView({changeTab}: Props) {
                         <Grid maxW={"5"} templateColumns={"repeat(2, 1fr)"} gap={4} mt={2} mb={8}>
                             <GridItem colSpan={2}>
                                 <CheckCircleIcon color={(page.address === undefined) ? "yellow.300" : "green.400"}/>&nbsp;&nbsp;
-                                {(page.address === undefined) ? "un" : ""}published
+                                {(page._tokenId === undefined) ? "un" : ""}published
                             </GridItem>
 
                             <GridItem colSpan={2} mt={4}>
@@ -125,10 +145,18 @@ export default function PageView({changeTab}: Props) {
                             </GridItem>
 
                             <GridItem>Image:</GridItem>
-                            <GridItem><IpfsLink hash={page._ipfsHashImage ?? ''}/></GridItem>
+                            <GridItem><IpfsLink hash={imageHash ?? ""}/></GridItem>
 
-                            <GridItem>Contract:</GridItem>
-                            <GridItem><Kbd d="inline" isTruncated={isMobile}>{page.address === undefined ? "---" : page.address}</Kbd></GridItem>
+                            <GridItem>NFT:</GridItem>
+                            <GridItem>
+                                <Kbd d="inline" isTruncated={isMobile}>
+                                    {page._tokenId === undefined ? "---" : (
+                                        <a href={`https://testnets-api.opensea.io/asset/${page._contract}/${page._tokenId}`} target="_blank">
+                                            {page._contract} [{page._tokenId}]
+                                        </a>
+                                    )}
+                                </Kbd>
+                            </GridItem>
 
                             <GridItem colSpan={2} mt={4}>
                                 <Divider/>
@@ -137,7 +165,10 @@ export default function PageView({changeTab}: Props) {
 
                         <FormControl>
                             <FormLabel>Image</FormLabel>
-                            <FileUpload/>
+                            <FileUpload
+                                onUploadComplete={onImageAttach}
+                                onFileRemove={onImageRemove}
+                            />
                         </FormControl>
 
                         <Box pt={4} visibility={(page.address !== undefined) ? "hidden" : "visible"}>

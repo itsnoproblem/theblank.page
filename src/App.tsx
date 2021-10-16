@@ -14,19 +14,6 @@ export default function App() {
     const [page, setPage] = useState(BPageService.latest(account));
     const pageState = { page, setPage }
 
-    const handleAccountsChanged = () => {
-        console.log(account)
-    }
-
-    React.useEffect(() => {
-        window.addEventListener('accountsChanged', () => { handleAccountsChanged() })
-
-        // cleanup this component
-        return () => {
-            window.removeEventListener('accountsChanged', () => { handleAccountsChanged() });
-        };
-    }, [handleAccountsChanged]);
-
     let chakraProvider =
     <>
         <ChakraProvider theme={theme}>

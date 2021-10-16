@@ -8,10 +8,14 @@ export default interface BPage {
     account?: string;
     address?: string;
     imageURL: string;
-    _ipfsHashImage: string
-    _ipfsHashMetadata?: string
     floorPrice?: number;
     royaltyPercent?: number;
+
+    _ipfsHashImage: string;
+    _ipfsHashMetadata?: string;
+    _transactionHash?: string;
+    _contract?: string;
+    _tokenId?: number;
 }
 
 export const blankPage = (account) => {
