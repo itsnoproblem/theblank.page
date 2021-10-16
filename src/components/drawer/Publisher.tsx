@@ -50,7 +50,7 @@ const Publisher = ({changeTab}: Props) => {
     const [forkingFee, setForkingFee] = useState(defaultForkingFee);
     const [publishingState, setPublishingState] = useState(STATE_DEFAULT);
     const {page, setPage} = useContext(EditorContext);
-    const nftAddress = '0xBb742e6a6460998d0dC29b33184E274Ef661583c'; // rinkeby
+    const nftAddress = '0x29AB461cA76bBac3137c7F207d0f2EA3fE4fa68C'; // rinkeby
     const nftContract = new Contract(nftAddress, JSON.stringify(solidityContract.abi), library?.getSigner());
 
     const handleRoyaltyChange = (value) => setRoyaltyValue(value);
@@ -123,7 +123,7 @@ const Publisher = ({changeTab}: Props) => {
             //
             if(library !== undefined) {
 
-                nftContract.newPage(account, page._ipfsHashMetadata, page._ipfsHashMetadata).then(async (response) => {
+                nftContract.newPage(account, page._ipfsHashMetadata, `ipfs://${page._ipfsHashMetadata}`).then(async (response) => {
                     console.log("minted", response);
                     setPublishingState(STATE_WAITING);
 
