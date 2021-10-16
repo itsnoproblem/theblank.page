@@ -6,11 +6,11 @@ import {EditorContext} from "../../editor-context";
 import env from 'react-dotenv';
 
 type Props = {
-    onUploadComplete: (ipfsHash: string) => void;
-    onFileRemove: () => void;
+    fileHash: string;
+    setFileHash: (hash: string) => void;
 }
 
-export const FileUpload = ({onUploadComplete, onFileRemove}: Props) => {
+export const FileUpload = ({fileHash, setFileHash}: Props) => {
     const {page} = useContext(EditorContext)
     const [images, setImages] = useState([]);
     const [pageId, setPageId] = useState(page.id);
@@ -26,7 +26,7 @@ export const FileUpload = ({onUploadComplete, onFileRemove}: Props) => {
 
     const handleRemoveImage = (e) => {
         console.log("remove image", e);
-        onFileRemove();
+        setFileHash("");
     }
 
     const handleImageUpload = (imageList, addUpdateIndex) => {
@@ -53,7 +53,7 @@ export const FileUpload = ({onUploadComplete, onFileRemove}: Props) => {
                     }
                 })
                 .then(function (response) {
-                    onUploadComplete(response.data.IpfsHash);
+                    setFileHash(response.data.IpfsHash);
                     setImageIsUploading(false);
                 })
                 .catch(function (error) {

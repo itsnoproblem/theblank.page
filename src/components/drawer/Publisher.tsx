@@ -119,7 +119,6 @@ const Publisher = ({changeTab}: Props) => {
             if(library !== undefined) {
 
                 nftContract.newPage(account, page._ipfsHashMetadata, page._ipfsHashMetadata).then(async (response) => {
-                    await response.wait();
                     console.log("minted", response);
 
                     nftContract.on('TokenID', (value, event) => {
@@ -133,6 +132,8 @@ const Publisher = ({changeTab}: Props) => {
                         setIsPublishing(false);
                         changeTab(1);
                     });
+
+                    await response.wait();
 
                 }).catch((reason) => {
                     console.log("mint failed", reason);
