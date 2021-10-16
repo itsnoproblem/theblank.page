@@ -31,6 +31,8 @@ import {FileUpload} from "./FileUpload";
 import {IpfsLink} from "../IpfsUrl";
 
 function EditableControls() {
+    const {page} = useContext(EditorContext)
+
     const {
         isEditing,
         getSubmitButtonProps,
@@ -45,7 +47,7 @@ function EditableControls() {
         </ButtonGroup>
     ) : (
         <Flex justifyContent="center">
-            <IconButton aria-label={"Edit"} size="sm" icon={<EditIcon />} {...getEditButtonProps()} />
+            {(!page._tokenId) && <IconButton aria-label={"Edit"} size="sm" icon={<EditIcon />} {...getEditButtonProps()} />}
         </Flex>
     )
 }
@@ -105,6 +107,7 @@ export default function PageView({changeTab}: Props) {
                             value={pageTitle}
                             fontSize="2xl"
                             isPreviewFocusable={false}
+                            isDisabled={page._tokenId ? true : false}
                             onSubmit={saveTitle}
                             onChange={(nextValue) => {
                                 setPageTitle(nextValue)
@@ -120,7 +123,7 @@ export default function PageView({changeTab}: Props) {
 
                     <Grid maxW={"5"} templateColumns={"repeat(2, 1fr)"} gap={4} mt={2} mb={8}>
                         <GridItem colSpan={2}>
-                            <CheckCircleIcon color={(page.address === undefined) ? "yellow.300" : "green.400"}/>&nbsp;&nbsp;
+                            <CheckCircleIcon color={(!page._contract) ? "yellow.300" : "green.400"}/>&nbsp;&nbsp;
                             {(page._tokenId === undefined) ? "un" : ""}published
                         </GridItem>
 

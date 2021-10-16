@@ -110,10 +110,10 @@ export const FileUpload = ({fileHash, setFileHash}: Props) => {
                                              aria-label={'Copied'}
                                         />
                                     </Tooltip>)
-                                    <IconButton icon={<ImBin2/>}
+                                    {(!page._tokenId) && <IconButton icon={<ImBin2/>}
                                         onClick={handleRemoveImage}
                                         aria-label={'Remove'}
-                                    />
+                                    />}
                                 </VStack>
                             </HStack>
                         </Box>

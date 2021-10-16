@@ -165,7 +165,10 @@ const Publisher = ({changeTab}: Props) => {
                     <FormControl id="floor-price" isRequired={true}>
                         <FormLabel>Floor Price</FormLabel>
                         <InputGroup size={"md"}>
-                            <Input id={"floor-price"} placeholder={"0.01"} />
+                            <Input id={"floor-price"}
+                                   placeholder={"0.01"}
+                                   isDisabled={(page._tokenId) ? true : false}
+                            />
                             <InputRightAddon>ETH</InputRightAddon>
                         </InputGroup>
                         <FormHelperText>The lowest price you will accept for an edition of this work.</FormHelperText>
@@ -184,6 +187,7 @@ const Publisher = ({changeTab}: Props) => {
                                 mr="2rem"
                                 value={royaltyValue}
                                 onChange={handleRoyaltyChange}
+                                isDisabled={(page._tokenId) ? true : false}
                             >
                                 <NumberInputField/>
                                 <NumberInputStepper>
@@ -202,6 +206,7 @@ const Publisher = ({changeTab}: Props) => {
                         <Switch id="allow-forks"
                                 defaultChecked={allowForks}
                                 onChange={() => handleAllowForksChange(!allowForks) }
+                                isDisabled={(page._tokenId) ? true : false}
                         />
                         <FormHelperText>Enable this if you want to allow others to create derivatives of this work.</FormHelperText>
                     </FormControl>
@@ -210,7 +215,9 @@ const Publisher = ({changeTab}: Props) => {
                     <FormControl id="fork-fee">
                         <FormLabel>Forking Fee</FormLabel>
                         <InputGroup size={"md"}>
-                            <NumberInput>
+                            <NumberInput
+                                isDisabled={(page._tokenId) ? true : false}
+                            >
                                 <NumberInputField  value={forkingFee} onChange={handleForkingFeeChange} textAlign={"right"} id={"fork-fee"} placeholder={"0.50"} disabled={!allowForks}/>
                             </NumberInput>å
                             <InputRightAddon>ETH</InputRightAddon>
@@ -226,6 +233,7 @@ const Publisher = ({changeTab}: Props) => {
                         <Switch id={"limited-edition"}
                                 defaultChecked={limitedEdition}
                                 onChange={() => handleLimitedEditionChange(!limitedEdition)}
+                                isDisabled={(page._tokenId) ? true : false}
                         />
                         <FormHelperText>
                             Enable this to limit the number of editions that can be minted
@@ -245,7 +253,7 @@ const Publisher = ({changeTab}: Props) => {
                                 onChange={handleMaxMintableChange}
                                 isDisabled={!limitedEdition}
                             >
-                                <NumberInputField disabled={!limitedEdition}/>
+                                <NumberInputField disabled={!limitedEdition || page._tokenId ? true : false}/>
                                 <NumberInputStepper visibility={(!limitedEdition) ? "hidden" : "visible"}>
                                     <NumberIncrementStepper/>
                                     <NumberDecrementStepper />
@@ -267,6 +275,7 @@ const Publisher = ({changeTab}: Props) => {
                         colorScheme={"cyan"}
                         rightIcon={(<ArrowForwardIcon/>)}
                         onClick={handleClickPublish}
+                        disabled={(page._tokenId) ? true : false}
                     >
                         Publish
                     </Button>
